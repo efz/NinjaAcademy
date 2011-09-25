@@ -32,17 +32,19 @@ public class Assets {
 //		backgroundLoading = new Texture(game, "loading.png", true);
 //		backgroundResuming = new Texture(game, "Resuming.png", true);
 //		backgroundRoom = new Texture(game, "room.png", true);
-		titleScreenBackground = new Texture(game, "textures/backgrounds/titlescreenBG.png", true);
-		ninja = new Texture(game, "textures/ninja.png", true);
-		title = new Texture(game, "textures/title.png", true);
+		titleScreenBackground = new Texture(game, "textures/backgrounds/titlescreenBG.png", false);
+		ninja = new Texture(game, "textures/ninja.png", false);
+		title = new Texture(game, "textures/title.png", false);
 	
 		titleScreenBackgroundRegion = new TextureRegion(titleScreenBackground,0,0,800,480);
-		ninjaRegion = new TextureRegion(titleScreenBackground,0,0,308,404);
-		titleRegion = new TextureRegion(titleScreenBackground,0,0,518,128);
+		ninjaRegion = new TextureRegion(ninja,0,0,308,404);
+		titleRegion = new TextureRegion(title,0,0,518,128);
 	}
 	
 	public static void reload() {
 		titleScreenBackground.reload();
+		ninja.reload();
+		title.reload();
 	}
 	
 }

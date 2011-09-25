@@ -46,6 +46,10 @@ public class SpriteBatcher {
         vertices.unbind();
     }
     
+    public void drawSprite(Vector2 position, float width, float height, TextureRegion region) {
+    	drawSprite(position.x, position.y, width, height, region);
+    }
+    
     public void drawSprite(float x, float y, float width, float height, TextureRegion region) {
         float halfWidth = width / 2;
         float halfHeight = height / 2;

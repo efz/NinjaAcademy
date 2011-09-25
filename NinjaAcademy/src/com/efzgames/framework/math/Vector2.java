@@ -66,6 +66,13 @@ public class Vector2 {
         return this;
     }
     
+    public static Vector2 mul(Vector2 vec,float scalar) {
+    	Vector2 newVec = new Vector2();
+    	newVec.x = vec.x * scalar;
+    	newVec.y = vec.y * scalar;
+        return newVec;
+    }
+    
     public float len() {               
         return FloatMath.sqrt(x*x + y*y);
     }
