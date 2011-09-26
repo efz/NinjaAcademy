@@ -1,5 +1,6 @@
 package com.efzgames.ninjaacademy;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 
 import com.efzgames.framework.impl.GLGame;
@@ -47,7 +48,7 @@ public class Assets {
 		
 		moireFont = game.getFileIO().readFont("fonts/Moire-Regular.ttf");
 		
-		testText = new SpriteText(game, "Hello Worldg", moireFont, 36, 255,255,255,255);
+		testText = new SpriteText(game, "Hello Worldg", moireFont, 36, Color.WHITE, Color.BLACK);
 	}
 	
 	public static void reload() {

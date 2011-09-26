@@ -35,7 +35,7 @@ public class MainMenuScreen extends GLScreen{
     private Vector2 ninjaPosition = new Vector2(184, 238);
     private Vector2 titlePosition = new Vector2(524, 396);
 
-    private Vector2 ninjaInitialOffset = new Vector2(-310, 228);
+    private Vector2 ninjaInitialOffset = new Vector2(-350, 228);
     private Vector2 titleInitialOffset = new Vector2(259, 696);
 
     private Vector2 ninjaOffset;

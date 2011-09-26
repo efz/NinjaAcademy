@@ -19,23 +19,32 @@ public class SpriteText {
 	private Texture texture;
 	private TextureRegion textureRegion;
 
-	public SpriteText(GLGame game, String text, Typeface font, int size, int alpha,
-			int red, int green, int blue) {
-
+	public SpriteText(GLGame game, String text, Typeface font, int size, int color, int shadowcolor) {
 		Paint textPaint = new Paint();
+		textPaint.setShadowLayer(0.2f, 5, 0, shadowcolor);
+		create(game, text, font, size, color, textPaint);
+	}
+	
+	public SpriteText(GLGame game, String text, Typeface font, int size, int color) {
+		Paint textPaint = new Paint();
+		create(game, text, font, size, color, textPaint);
+	}
+
+	private void create(GLGame game, String text, Typeface font, int size,
+			int color, Paint textPaint) {
 		textPaint.setTypeface(font);
 		textPaint.setTextSize(size);
 		textPaint.setAntiAlias(true);
-		textPaint.setARGB(alpha, red, green, blue);
+		textPaint.setColor(color);
 
 		Rect bounds = new Rect();
 		textPaint.getTextBounds(text, 0, text.length(), bounds);
 		
-
+		int padding =5;
 		int descent = (int) Math.ceil(textPaint.descent());
 		int ascent = (int) Math.ceil(-textPaint.ascent());
-		width = (int) Math.ceil(textPaint.measureText(text));
-		height = ascent + descent;
+		width = (int) Math.ceil(textPaint.measureText(text)) + 2*padding;
+		height = ascent + descent+2*padding;
 		
 		// Create an empty, mutable bitmap
 		Bitmap bitmap = Bitmap.createBitmap(width, height,
@@ -45,7 +54,7 @@ public class SpriteText {
 		bitmap.eraseColor(0);
 
 		// draw the text centered
-		canvas.drawText(text, 0, ascent, textPaint);
+		canvas.drawText(text, padding, ascent, textPaint);
 
 		texture = new Texture(game.getGLGraphics(), bitmap);
 		textureRegion = new TextureRegion(texture, 0, 0, width, height);
