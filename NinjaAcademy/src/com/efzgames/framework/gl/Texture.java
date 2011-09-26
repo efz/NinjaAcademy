@@ -86,7 +86,8 @@ public class Texture {
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, 0);
 			width = bitmap.getWidth();
 			height = bitmap.getHeight();
-			bitmap.recycle();
+			if(fileBitmap == null)
+				bitmap.recycle();
 		}
 	}
 
