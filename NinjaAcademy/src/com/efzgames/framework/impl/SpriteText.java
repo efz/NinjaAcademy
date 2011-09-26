@@ -18,33 +18,44 @@ public class SpriteText {
 	private int width;
 	private Texture texture;
 	private TextureRegion textureRegion;
-
-	public SpriteText(GLGame game, String text, Typeface font, int size, int color, int shadowcolor) {
-		Paint textPaint = new Paint();
-		textPaint.setShadowLayer(0.2f, 5, 0, shadowcolor);
-		create(game, text, font, size, color, textPaint);
+	
+	public int getWidth(){
+		return width;
 	}
 	
-	public SpriteText(GLGame game, String text, Typeface font, int size, int color) {
+	public int getHeight(){
+		return height;
+	}
+
+	public SpriteText(GLGame game, String text, Typeface font, int size, int color, int shadowcolor,
+			int minwidth, int minheight) {
 		Paint textPaint = new Paint();
-		create(game, text, font, size, color, textPaint);
+		textPaint.setShadowLayer(0.1f, 4, 4, shadowcolor);
+		create(game, text, font, size, color, textPaint, minwidth, minheight);
+	}
+	
+	public SpriteText(GLGame game, String text, Typeface font, int size, int color,
+			int minwidth, int minheight) {
+		Paint textPaint = new Paint();
+		create(game, text, font, size, color, textPaint, minwidth, minheight);
 	}
 
 	private void create(GLGame game, String text, Typeface font, int size,
-			int color, Paint textPaint) {
+			int color, Paint textPaint,int minwidth, int minheight) {
+		
 		textPaint.setTypeface(font);
 		textPaint.setTextSize(size);
 		textPaint.setAntiAlias(true);
 		textPaint.setColor(color);
-
-		Rect bounds = new Rect();
-		textPaint.getTextBounds(text, 0, text.length(), bounds);
-		
-		int padding =5;
+	
 		int descent = (int) Math.ceil(textPaint.descent());
 		int ascent = (int) Math.ceil(-textPaint.ascent());
-		width = (int) Math.ceil(textPaint.measureText(text)) + 2*padding;
-		height = ascent + descent+2*padding;
+		
+		int textHeight = ascent + descent;
+	    int textWidth =  (int) Math.ceil(textPaint.measureText(text)) ;
+	    width =  Math.max(textWidth, minwidth) ;
+		height = Math.max(textHeight,minheight) ;		
+
 		
 		// Create an empty, mutable bitmap
 		Bitmap bitmap = Bitmap.createBitmap(width, height,
@@ -54,7 +65,7 @@ public class SpriteText {
 		bitmap.eraseColor(0);
 
 		// draw the text centered
-		canvas.drawText(text, padding, ascent, textPaint);
+		canvas.drawText(text, (width - textWidth)/2, ascent+ (height - textHeight)/2, textPaint);
 
 		texture = new Texture(game.getGLGraphics(), bitmap);
 		textureRegion = new TextureRegion(texture, 0, 0, width, height);

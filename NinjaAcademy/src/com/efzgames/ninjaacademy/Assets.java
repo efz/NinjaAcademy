@@ -25,7 +25,9 @@ public class Assets {
 	public static TextureRegion ninjaRegion;
 	public static TextureRegion titleRegion;
 	
-	public static SpriteText testText;
+	public static SpriteText startText;
+	public static SpriteText highscoreText;
+	public static SpriteText exitText;
 	
 	public static Typeface moireFont;
 	
@@ -48,14 +50,19 @@ public class Assets {
 		
 		moireFont = game.getFileIO().readFont("fonts/Moire-Regular.ttf");
 		
-		testText = new SpriteText(game, "Hello Worldg", moireFont, 36, Color.WHITE, Color.BLACK);
+		startText = new SpriteText(game, "Start", moireFont, 48, Color.WHITE, Color.BLACK, 140, 60);
+		highscoreText = new SpriteText(game, "High Score", moireFont, 48, Color.WHITE, Color.BLACK ,  320, 60);
+		exitText = new SpriteText(game, "Exit", moireFont, 48, Color.WHITE, Color.BLACK,  100, 60);
 	}
 	
 	public static void reload() {
 		titleScreenBackground.reload();
 		ninja.reload();
 		title.reload();
-		testText.reload();
+		
+		startText.reload();
+		highscoreText.reload();
+		exitText.reload();
 	}
 	
 }

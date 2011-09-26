@@ -40,6 +40,8 @@ public class MainMenuScreen extends GLScreen{
 
     private Vector2 ninjaOffset;
     private Vector2 titleOffset; 
+    
+    static final int menuEntryPadding = 5;
 	
 	public MainMenuScreen(Game game) {
 		super(game);
@@ -135,7 +137,17 @@ public class MainMenuScreen extends GLScreen{
 				308, 404, Assets.ninjaRegion);
 		batcher.endBatch();
 		
-		Assets.testText.draw(batcher, 500, 200);
+		float PositionY = 200.0f;	
+		float PositionX = 520;
+		Assets.startText.draw(batcher, PositionX, PositionY);
+		PositionY -= Assets.startText.getHeight() + menuEntryPadding;
+		
+		PositionX = 520 ;
+		Assets.highscoreText.draw(batcher, PositionX, PositionY);
+		PositionY -= Assets.highscoreText.getHeight() + menuEntryPadding;
+		
+		PositionX = 520;
+		Assets.exitText.draw(batcher, PositionX, PositionY);
 		
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_TEXTURE_2D);
