@@ -31,4 +31,6 @@ public class NinjaAcademy extends GLGame{
 	public void onPause() {
 		super.onPause();		
 	}
+	
+	
 }

@@ -184,4 +184,8 @@ public abstract class GLGame extends Activity implements Game, Renderer {
     public Screen getCurrentScreen() {
         return screen;
     }   
+    
+    public void exit(){
+		finish();
+	}
 }

@@ -9,4 +9,12 @@ public class Rectangle {
         this.width = width;
         this.height = height;
     }
+    
+    public float getCenterX(){
+    	return lowerLeft.x+width/2;
+    }
+    
+    public float getCenterY(){
+    	return lowerLeft.y+height/2;
+    }
 }

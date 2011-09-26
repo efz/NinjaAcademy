@@ -1,12 +1,19 @@
 package com.efzgames.ninjaacademy.screens;
 
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
 
+
+import com.efzgames.framework.Input.TouchEvent;
+import com.efzgames.framework.math.OverlapTester;
 import com.efzgames.ninjaacademy.Assets;
+import com.efzgames.ninjaacademy.Defines;
 import com.efzgames.framework.gl.Camera2D;
 import com.efzgames.framework.gl.SpriteBatcher;
 import com.efzgames.framework.Game;
 import com.efzgames.framework.impl.GLScreen;
+import com.efzgames.framework.math.Rectangle;
 import com.efzgames.framework.math.Vector2;
 
 enum ElementState
@@ -41,21 +48,67 @@ public class MainMenuScreen extends GLScreen{
     private Vector2 ninjaOffset;
     private Vector2 titleOffset; 
     
-    static final int menuEntryPadding = 5;
+   
+    
+    private Rectangle startBounds;
+    private Rectangle highscoreBounds;
+    private Rectangle exitBounds;
+    private Vector2 touchPoint;
 	
 	public MainMenuScreen(Game game) {
 		super(game);
 		
-		guiCam = new Camera2D(glGraphics, 800, 480);
+		guiCam = new Camera2D(glGraphics, Defines.viewPortWidth, Defines.viewPortHeight);
 		batcher = new SpriteBatcher(glGraphics, 10);
 		
 		ninjaOffset = ninjaInitialOffset;
         titleOffset = titleInitialOffset;
+        
+        float PositionY = 200.0f;	
+		float PositionX = 520;
+		int menuEntryPadding = 5;
+        
+        startBounds = new Rectangle(PositionX-Assets.startTextWidth/2, 
+        		PositionY -Assets.menuTextHeight/2 , Assets.startTextWidth,
+        		Assets.menuTextHeight);
+        PositionY -= Assets.menuTextHeight + menuEntryPadding;
+        
+        highscoreBounds = new Rectangle(PositionX-Assets.highscoreTextWidth/2, 
+        		PositionY -Assets.menuTextHeight/2 , Assets.highscoreTextWidth,
+        		Assets.menuTextHeight);
+        PositionY -= Assets.menuTextHeight + menuEntryPadding;
+        
+        exitBounds = new Rectangle(PositionX-Assets.exitTextWidth/2, 
+        		PositionY -Assets.menuTextHeight/2 , Assets.exitTextWidth,
+        		Assets.menuTextHeight);
+        
+        touchPoint = new Vector2();
 	}
 	
 	@Override
 	public void update(float deltaTime) {
 	
+		List<TouchEvent> events = game.getInput().getTouchEvents();
+		int len = events.size();
+		for (int i = 0; i < len; i++) {
+			TouchEvent event = events.get(i);
+			if (event.type != TouchEvent.TOUCH_UP)
+				continue;
+
+			touchPoint.set(event.x, Defines.viewPortHeight - event.y);
+			if (OverlapTester.pointInRectangle(startBounds, touchPoint)) {
+				
+			}
+			if (OverlapTester.pointInRectangle(highscoreBounds, touchPoint)) {
+				
+			}
+			if (OverlapTester.pointInRectangle(exitBounds, touchPoint)) {
+				Assets.playSound(Assets.menuSelectionSound);
+				game.exit();
+				return;
+			}
+		}
+		
 		// Cause the ninja and title text to appear gradually
         ninjaTimer += deltaTime;
         titleTimer += deltaTime;
@@ -137,17 +190,12 @@ public class MainMenuScreen extends GLScreen{
 				308, 404, Assets.ninjaRegion);
 		batcher.endBatch();
 		
-		float PositionY = 200.0f;	
-		float PositionX = 520;
-		Assets.startText.draw(batcher, PositionX, PositionY);
-		PositionY -= Assets.startText.getHeight() + menuEntryPadding;
 		
-		PositionX = 520 ;
-		Assets.highscoreText.draw(batcher, PositionX, PositionY);
-		PositionY -= Assets.highscoreText.getHeight() + menuEntryPadding;
+		Assets.startText.draw(batcher, startBounds.getCenterX(), startBounds.getCenterY());			
 		
-		PositionX = 520;
-		Assets.exitText.draw(batcher, PositionX, PositionY);
+		Assets.highscoreText.draw(batcher,highscoreBounds.getCenterX(), highscoreBounds.getCenterY());
+		
+		Assets.exitText.draw(batcher, exitBounds.getCenterX(), exitBounds.getCenterY());
 		
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_TEXTURE_2D);

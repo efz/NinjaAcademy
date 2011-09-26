@@ -3,6 +3,7 @@ package com.efzgames.ninjaacademy;
 import android.graphics.Color;
 import android.graphics.Typeface;
 
+import com.efzgames.framework.Sound;
 import com.efzgames.framework.impl.GLGame;
 import com.efzgames.framework.impl.SpriteText;
 import com.efzgames.framework.gl.Texture;
@@ -29,6 +30,13 @@ public class Assets {
 	public static SpriteText highscoreText;
 	public static SpriteText exitText;
 	
+	public static final int startTextWidth = 140;
+	public static final int highscoreTextWidth = 320;
+	public static final int exitTextWidth = 100;
+	public static final int menuTextHeight = 60;
+	
+	public static Sound menuSelectionSound;
+	
 	public static Typeface moireFont;
 	
 	public static void load(GLGame game) {
@@ -50,9 +58,14 @@ public class Assets {
 		
 		moireFont = game.getFileIO().readFont("fonts/Moire-Regular.ttf");
 		
-		startText = new SpriteText(game, "Start", moireFont, 48, Color.WHITE, Color.BLACK, 140, 60);
-		highscoreText = new SpriteText(game, "High Score", moireFont, 48, Color.WHITE, Color.BLACK ,  320, 60);
-		exitText = new SpriteText(game, "Exit", moireFont, 48, Color.WHITE, Color.BLACK,  100, 60);
+		startText = new SpriteText(game, "Start", moireFont, 48, Color.WHITE, Color.BLACK, startTextWidth,
+					menuTextHeight);
+		highscoreText = new SpriteText(game, "High Score", moireFont, 48, Color.WHITE, Color.BLACK , 
+				highscoreTextWidth, menuTextHeight);
+		exitText = new SpriteText(game, "Exit", moireFont, 48, Color.WHITE, Color.BLACK,  exitTextWidth, 
+				menuTextHeight);
+		
+		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
 	}
 	
 	public static void reload() {
@@ -63,6 +76,10 @@ public class Assets {
 		startText.reload();
 		highscoreText.reload();
 		exitText.reload();
+	}
+	
+	public static void playSound(Sound sound) {		
+			sound.play(1);
 	}
 	
 }
