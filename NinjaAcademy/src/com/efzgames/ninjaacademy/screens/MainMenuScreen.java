@@ -35,7 +35,7 @@ public class MainMenuScreen extends GLScreen{
     private Vector2 ninjaPosition = new Vector2(184, 238);
     private Vector2 titlePosition = new Vector2(524, 396);
 
-    private Vector2 ninjaInitialOffset = new Vector2(-246, 228);
+    private Vector2 ninjaInitialOffset = new Vector2(-310, 228);
     private Vector2 titleInitialOffset = new Vector2(259, 696);
 
     private Vector2 ninjaOffset;
@@ -134,6 +134,8 @@ public class MainMenuScreen extends GLScreen{
 		batcher.drawSprite(ninjaPosition.x + ninjaOffset.x,  ninjaPosition.y + ninjaOffset.y, 
 				308, 404, Assets.ninjaRegion);
 		batcher.endBatch();
+		
+		Assets.testText.draw(batcher, 500, 200);
 		
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_TEXTURE_2D);

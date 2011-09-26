@@ -26,6 +26,16 @@ public class Texture {
 	public int height;
 	boolean mipmapped;
 
+	Bitmap fileBitmap;
+
+	public Texture(GLGraphics glGraphics, Bitmap fileBitmap) {
+		this.glGraphics = glGraphics;
+		this.fileBitmap = fileBitmap;
+		this.mipmapped = false;
+		
+		load(fileBitmap);
+	}
+
 	public Texture(GLGame glGame, String fileName) {
 		this(glGame, fileName, false);
 	}
@@ -39,26 +49,13 @@ public class Texture {
 	}
 
 	private void load() {
-		GL10 gl = glGraphics.getGL();
-		int[] textureIds = new int[1];
-		gl.glGenTextures(1, textureIds, 0);
-		textureId = textureIds[0];
+		
 
 		InputStream in = null;
+		Bitmap bitmap = null;
 		try {
 			in = fileIO.readAsset(fileName);
-			Bitmap bitmap = BitmapFactory.decodeStream(in);
-			if (mipmapped) {
-				createMipmaps(gl, bitmap);
-			} else {
-				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
-				GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-				setFilters(GL10.GL_NEAREST, GL10.GL_NEAREST);
-				gl.glBindTexture(GL10.GL_TEXTURE_2D, 0);
-				width = bitmap.getWidth();
-				height = bitmap.getHeight();
-				bitmap.recycle();
-			}
+			bitmap = BitmapFactory.decodeStream(in);
 		} catch (IOException e) {
 			throw new RuntimeException("Couldn't load texture '" + fileName
 					+ "'", e);
@@ -68,6 +65,28 @@ public class Texture {
 					in.close();
 				} catch (IOException e) {
 				}
+		}
+		
+		load(bitmap);
+
+	}
+
+	private void load(Bitmap bitmap) {
+		GL10 gl = glGraphics.getGL();
+		int[] textureIds = new int[1];
+		gl.glGenTextures(1, textureIds, 0);
+		textureId = textureIds[0];
+
+		if (mipmapped) {
+			createMipmaps(gl, bitmap);
+		} else {
+			gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
+			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+			setFilters(GL10.GL_NEAREST, GL10.GL_NEAREST);
+			gl.glBindTexture(GL10.GL_TEXTURE_2D, 0);
+			width = bitmap.getWidth();
+			height = bitmap.getHeight();
+			bitmap.recycle();
 		}
 	}
 
@@ -87,7 +106,8 @@ public class Texture {
 			if (newWidth <= 0 || newHeight <= 0)
 				break;
 
-			Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+			Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth,
+					newHeight, true);
 			bitmap.recycle();
 			bitmap = newBitmap;
 			level++;
@@ -98,7 +118,11 @@ public class Texture {
 	}
 
 	public void reload() {
-		load();
+		if(fileBitmap == null)
+			load();
+		else
+			load(fileBitmap);
+		
 		bind();
 		setFilters(minFilter, magFilter);
 		glGraphics.getGL().glBindTexture(GL10.GL_TEXTURE_2D, 0);
@@ -124,5 +148,7 @@ public class Texture {
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
 		int[] textureIds = { textureId };
 		gl.glDeleteTextures(1, textureIds, 0);
+		if (fileBitmap != null)
+			fileBitmap.recycle();
 	}
 }

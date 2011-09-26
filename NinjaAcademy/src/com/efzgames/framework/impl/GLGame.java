@@ -66,6 +66,15 @@ public abstract class GLGame extends Activity implements Game, Renderer {
     
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {        
+    	
+    	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
+    	        GL10.GL_CLAMP_TO_EDGE);
+    	gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
+    	        GL10.GL_CLAMP_TO_EDGE);
+
+    	gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE,
+    	        GL10.GL_REPLACE);
+    	    
         glGraphics.setGL(gl);
         
         synchronized(stateChanged) {

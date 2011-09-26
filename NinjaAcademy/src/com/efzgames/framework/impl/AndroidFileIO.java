@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Environment;
 
 import com.efzgames.framework.FileIO;
@@ -20,6 +21,11 @@ public class AndroidFileIO implements FileIO {
         this.assets = assets;
         this.externalStoragePath = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + File.separator;
+    }
+    
+    @Override
+    public Typeface readFont(String fileName){
+    	return Typeface.createFromAsset(assets, fileName);
     }
 
     @Override

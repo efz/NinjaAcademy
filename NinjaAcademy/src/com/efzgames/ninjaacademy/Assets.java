@@ -1,6 +1,9 @@
 package com.efzgames.ninjaacademy;
 
+import android.graphics.Typeface;
+
 import com.efzgames.framework.impl.GLGame;
+import com.efzgames.framework.impl.SpriteText;
 import com.efzgames.framework.gl.Texture;
 import com.efzgames.framework.gl.TextureRegion;
 
@@ -21,7 +24,9 @@ public class Assets {
 	public static TextureRegion ninjaRegion;
 	public static TextureRegion titleRegion;
 	
+	public static SpriteText testText;
 	
+	public static Typeface moireFont;
 	
 	public static void load(GLGame game) {
 //		backgroundActivating = new Texture(game, "Activating.png", true);
@@ -39,12 +44,17 @@ public class Assets {
 		titleScreenBackgroundRegion = new TextureRegion(titleScreenBackground,0,0,800,480);
 		ninjaRegion = new TextureRegion(ninja,0,0,308,404);
 		titleRegion = new TextureRegion(title,0,0,518,128);
+		
+		moireFont = game.getFileIO().readFont("fonts/Moire-Regular.ttf");
+		
+		testText = new SpriteText(game, "Hello Worldg", moireFont, 36, 255,255,255,255);
 	}
 	
 	public static void reload() {
 		titleScreenBackground.reload();
 		ninja.reload();
 		title.reload();
+		testText.reload();
 	}
 	
 }
