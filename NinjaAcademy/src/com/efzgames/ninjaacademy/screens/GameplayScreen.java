@@ -9,11 +9,13 @@ import com.efzgames.ninjaacademy.Assets;
 import com.efzgames.ninjaacademy.GameConfiguration;
 import com.efzgames.ninjaacademy.elements.GameComponent;
 import com.efzgames.ninjaacademy.elements.HitPointsComponent;
+import com.efzgames.ninjaacademy.elements.ScoreComponent;
 import com.efzgames.ninjaacademy.NinjaAcademy;
 
 public class GameplayScreen  extends GameScreen {
 	
 	private HitPointsComponent hitPointsComponent;
+	private ScoreComponent scoreComponent;
 	
 	public GameplayScreen(Game game) {
 		super(game);
@@ -54,6 +56,7 @@ public class GameplayScreen  extends GameScreen {
 		batcher.endBatch();
 		
 		hitPointsComponent.present(deltaTime, batcher);
+		scoreComponent.present(deltaTime, batcher);
 		
 		for(GameComponent comp: ((NinjaAcademy)game).components){
 			if(!comp.IsVisible)
@@ -71,8 +74,11 @@ public class GameplayScreen  extends GameScreen {
     /// </summary>
     private void CreateHUDComponents()
     {        // Create the component for displaying hit points
-        hitPointsComponent = new HitPointsComponent();        
+        hitPointsComponent = new HitPointsComponent(glGame);        
         hitPointsComponent.totalHitPoints = GameConfiguration.playerLives;
-        hitPointsComponent.currentHitPoints = GameConfiguration.playerLives;        
+        hitPointsComponent.currentHitPoints = GameConfiguration.playerLives;   
+        
+        scoreComponent = new ScoreComponent(glGame);
+        scoreComponent.score =0;
     }
 }
