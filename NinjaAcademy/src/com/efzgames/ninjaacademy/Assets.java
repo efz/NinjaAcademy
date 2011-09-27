@@ -3,6 +3,7 @@ package com.efzgames.ninjaacademy;
 import android.graphics.Color;
 import android.graphics.Typeface;
 
+import com.efzgames.framework.Music;
 import com.efzgames.framework.Sound;
 import com.efzgames.framework.impl.GLGame;
 import com.efzgames.framework.impl.SpriteText;
@@ -41,6 +42,7 @@ public class Assets {
 	public static final int menuTextHeight = 60;
 	
 	public static Sound menuSelectionSound;
+	public static Music ninjaAcademyMusic;
 	
 	public static Typeface moireFont;
 	
@@ -75,6 +77,8 @@ public class Assets {
 				menuTextHeight);
 		
 		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
+		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
+		Assets.ninjaAcademyMusic.setLooping(true);
 	}
 	
 	public static void reload() {

@@ -24,12 +24,15 @@ public class NinjaAcademy extends GLGame{
 			firstTimeCreate = false;
 		} else {
 			Assets.reload();
+			
 		}
+		Assets.ninjaAcademyMusic.play();
 	}
 
 	@Override
 	public void onPause() {
-		super.onPause();		
+		super.onPause();	
+		Assets.ninjaAcademyMusic.stop();
 	}
 	
 	
