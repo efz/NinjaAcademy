@@ -27,7 +27,7 @@ public class InstructionsScreen  extends GameScreen {
 			TouchEvent event = events.get(i);
 			if (event.type == TouchEvent.TOUCH_UP){
 				Assets.playSound(Assets.menuSelectionSound);
-				game.setScreen(new MainMenuScreen(game));
+				game.setScreen(new CountdownScreen(game));
 				break;
 			}
 		}
