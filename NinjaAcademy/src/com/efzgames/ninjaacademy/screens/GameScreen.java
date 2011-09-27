@@ -1,86 +1,41 @@
 package com.efzgames.ninjaacademy.screens;
 
+import com.efzgames.framework.Game;
+import com.efzgames.framework.gl.Camera2D;
+import com.efzgames.framework.gl.SpriteBatcher;
+import com.efzgames.framework.impl.GLScreen;
+import com.efzgames.ninjaacademy.Defines;
 
 
-public abstract class GameScreen {
 
-	 private boolean isPopup = false;
-	 
-	 protected void setIsPopUp(boolean value){
-		 isPopup = value;
-	 }
-	 
-	 public boolean getIsPopUp(){
-		 return isPopup;
-	 }
+public abstract class GameScreen extends GLScreen{
+	Camera2D guiCam;
+	SpriteBatcher batcher;
 	
-	private float transitionOnTime = 0;
+	public GameScreen(Game game) {
+		super(game);
+
+		guiCam = new Camera2D(glGraphics, Defines.viewPortWidth,
+				Defines.viewPortHeight);
+		batcher = new SpriteBatcher(glGraphics, 10);
+	}
 	
-	 protected void setTransitionOnTime(float value){
-		 transitionOnTime = value;
-	 }
-	 
-	 public float getTransitionOnTime(){
-		 return transitionOnTime;
-	 }
-	
-	private float transitionOffTime = 0;
-	
-	protected void setTransitionOffTime(float value){
-		 transitionOffTime = value;
-	 }
-	 
-	 public float getTransitionOffTime(){
-		 return transitionOffTime;
-	 }
-	
-	private float transitionPosition = 1;
-	
-	protected void setTransitionPosition(float value){
-		transitionPosition = value;
-	 }
-	 
-	 public float getTransitionPosition(){
-		 return transitionPosition;
-	 }
-	
-	
-	 public float getTransitionAlpha(){
-		 return 1- transitionPosition;
-	 }
-	 
-	 private ScreenState screenState = ScreenState.TransitionOn;
-	 
-	 protected void SetScreenState(ScreenState value){
-		 screenState = value;
-	 }
-	 
-	 public ScreenState GetScreenState(){
-		 return screenState;
-	 }
-	 
-	 private boolean isExiting = false;
-	 
-	 protected void setIsExiting(boolean value){
-		 isExiting = value;
-	 }
-	 
-	 public boolean getIsExiting(){
-		 return isExiting;
-	 }
-	 
-	 private boolean otherScreenHasFocus;
-	 
-	 public boolean isActive(){        
-         return !otherScreenHasFocus &&  (screenState == ScreenState.Active);       
-     }
-	 
-	 private ScreenManager screenManager;
-	 
-	 void setScreenManager(ScreenManager value) {
-		 screenManager = value;
-	 }
-	 
-	 
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
 	 
 }
