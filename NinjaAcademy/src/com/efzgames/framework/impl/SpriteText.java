@@ -16,11 +16,16 @@ public class SpriteText {
 
 	private int height;
 	private int width;
+	private int textWidth;
 	private Texture texture;
 	private TextureRegion textureRegion;
 	
 	public int getWidth(){
 		return width;
+	}
+	
+	public int getTextWidth(){
+		return textWidth;
 	}
 	
 	public int getHeight(){
@@ -52,7 +57,7 @@ public class SpriteText {
 		int ascent = (int) Math.ceil(-textPaint.ascent());
 		
 		int textHeight = ascent + descent;
-	    int textWidth =  (int) Math.ceil(textPaint.measureText(text)) ;
+	    textWidth =  (int) Math.ceil(textPaint.measureText(text)) ;
 	    width =  Math.max(textWidth, minwidth) ;
 		height = Math.max(textHeight,minheight) ;		
 

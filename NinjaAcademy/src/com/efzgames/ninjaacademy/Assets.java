@@ -79,12 +79,14 @@ public class Assets {
 	
 	public static void reload() {
 		titleScreenBackground.reload();
+		highscoreScreenBackground.reload();
 		ninja.reload();
 		title.reload();
 		
 		startText.reload();
 		highscoreText.reload();
 		exitText.reload();
+		highscoreTitle.reload();
 	}
 	
 	public static void playSound(Sound sound) {		
