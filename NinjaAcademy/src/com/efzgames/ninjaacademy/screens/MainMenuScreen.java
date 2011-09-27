@@ -103,7 +103,9 @@ public class MainMenuScreen extends GLScreen {
 			touchPoint.set(event.x * inputScaleX, Defines.viewPortHeight
 					- event.y * inputScaleY);
 			if (OverlapTester.pointInRectangle(startBounds, touchPoint)) {
-
+				Assets.playSound(Assets.menuSelectionSound);
+				game.setScreen(new InstructionsScreen(game));
+				return;
 			}
 			if (OverlapTester.pointInRectangle(highscoreBounds, touchPoint)) {
 				Assets.playSound(Assets.menuSelectionSound);

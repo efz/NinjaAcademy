@@ -21,6 +21,7 @@ public class Assets {
 	
 	public static Texture highscoreScreenBackground;
 	public static Texture titleScreenBackground;
+	public static Texture instructionsScreenBackground;
 	
 	public static Texture ninja;
 	public static Texture title;
@@ -28,6 +29,8 @@ public class Assets {
 	
 	public static TextureRegion titleScreenBackgroundRegion;
 	public static TextureRegion highscoreScreenBackgroundRegion;
+	public static TextureRegion instructionsScreenBackgroundRegion;
+	
 	public static TextureRegion ninjaRegion;
 	public static TextureRegion titleRegion;
 	public static TextureRegion highscoreTitleRegion;
@@ -57,12 +60,14 @@ public class Assets {
 //		backgroundRoom = new Texture(game, "room.png", true);
 		titleScreenBackground = new Texture(game, "textures/backgrounds/titlescreenBG.png", false);
 		highscoreScreenBackground = new Texture(game, "textures/backgrounds/highscoreBg.png", false);
+		instructionsScreenBackground = new Texture(game, "textures/backgrounds/Instructions.png", false);
 		ninja = new Texture(game, "textures/ninja.png", false);
 		title = new Texture(game, "textures/title.png", false);
 		highscoreTitle = new Texture(game, "textures/highscore_title.png", false);
 	
 		titleScreenBackgroundRegion = new TextureRegion(titleScreenBackground,0,0,800,480);
 		highscoreScreenBackgroundRegion = new TextureRegion(highscoreScreenBackground,0,0,800,480);
+		instructionsScreenBackgroundRegion = new TextureRegion(highscoreScreenBackground,0,0,800,480);
 		ninjaRegion = new TextureRegion(ninja,0,0,308,404);
 		titleRegion = new TextureRegion(title,0,0,518,128);
 		highscoreTitleRegion = new TextureRegion(highscoreTitle,0,0,286,49);
@@ -84,6 +89,7 @@ public class Assets {
 	public static void reload() {
 		titleScreenBackground.reload();
 		highscoreScreenBackground.reload();
+		instructionsScreenBackground.reload();
 		ninja.reload();
 		title.reload();
 		
