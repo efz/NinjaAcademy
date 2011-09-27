@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.Color;
 
 import com.efzgames.framework.Game;
+import com.efzgames.framework.Input.TouchEvent;
 import com.efzgames.framework.impl.SpriteText;
 import com.efzgames.ninjaacademy.Assets;
 import com.efzgames.ninjaacademy.Defines;
@@ -45,7 +46,17 @@ public class HighScoreScreen extends GameScreen{
 
 	@Override
 	public void update(float deltaTime) {
-		// TODO Auto-generated method stub
+		List<TouchEvent> events = game.getInput().getTouchEvents();
+		int len = events.size();
+
+		for (int i = 0; i < len; i++) {
+			TouchEvent event = events.get(i);
+			if (event.type == TouchEvent.TOUCH_UP){
+				Assets.playSound(Assets.menuSelectionSound);
+				game.setScreen(new MainMenuScreen(game));
+				break;
+			}
+		}
 		
 	}
 
