@@ -35,7 +35,7 @@ public class CountdownScreen  extends GameScreen {
 		if (countdownValue <= 0)
         {
 			Assets.playSound(Assets.menuSelectionSound);
-			game.setScreen(new MainMenuScreen(game));		
+			game.setScreen(new GameplayScreen(game));		
         }
 	}
 

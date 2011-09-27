@@ -54,6 +54,12 @@ public class Assets {
 	public static Typeface moireFont;
 	public static Typeface moireBoldFont;
 	
+	// Game Elements
+	public static Texture emptyHeart;
+	public static Texture fullHeart;
+	public static TextureRegion emptyHeartRegion;
+	public static TextureRegion fullHeartRegion;
+	
 	public static void load(GLGame game) {
 
 		titleScreenBackground = new Texture(game, "textures/backgrounds/titlescreenBG.png", false);
@@ -87,6 +93,12 @@ public class Assets {
 		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
 		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
 		Assets.ninjaAcademyMusic.setLooping(true);
+		
+		// Game Elements
+		emptyHeart = new Texture(game, "textures/elements/emptyHeart.png", false);
+		fullHeart = new Texture(game, "textures/elements/heart.png", false);
+		emptyHeartRegion = new TextureRegion(emptyHeart,0,0,49,39);
+		fullHeartRegion = new TextureRegion(fullHeart,0,0,49,39);
 	}
 	
 	public static void reload() {
@@ -102,6 +114,10 @@ public class Assets {
 		highscoreText.reload();
 		exitText.reload();
 		highscoreTitle.reload();
+		
+		// Game Elements
+		emptyHeart.reload();
+		fullHeart.reload();
 	}
 	
 	public static void playSound(Sound sound) {		
