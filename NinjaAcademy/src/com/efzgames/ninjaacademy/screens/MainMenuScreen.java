@@ -7,7 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.efzgames.framework.Input.TouchEvent;
 import com.efzgames.framework.math.OverlapTester;
 import com.efzgames.ninjaacademy.Assets;
-import com.efzgames.ninjaacademy.Defines;
+import com.efzgames.ninjaacademy.GameConstants;
 import com.efzgames.framework.gl.Camera2D;
 import com.efzgames.framework.gl.SpriteBatcher;
 import com.efzgames.framework.Game;
@@ -55,8 +55,8 @@ public class MainMenuScreen extends GLScreen {
 	public MainMenuScreen(Game game) {
 		super(game);
 
-		guiCam = new Camera2D(glGraphics, Defines.viewPortWidth,
-				Defines.viewPortHeight);
+		guiCam = new Camera2D(glGraphics, GameConstants.viewPortWidth,
+				GameConstants.viewPortHeight);
 		batcher = new SpriteBatcher(glGraphics, 10);
 
 		ninjaOffset = ninjaInitialOffset;
@@ -82,9 +82,9 @@ public class MainMenuScreen extends GLScreen {
 
 		touchPoint = new Vector2();
 
-		inputScaleX = (float) Defines.viewPortWidth
+		inputScaleX = (float) GameConstants.viewPortWidth
 				/ game.getGLGraphics().getWidth();
-		inputScaleY = (float) Defines.viewPortHeight
+		inputScaleY = (float) GameConstants.viewPortHeight
 				/ game.getGLGraphics().getHeight();
 
 	}
@@ -100,7 +100,7 @@ public class MainMenuScreen extends GLScreen {
 			if (event.type != TouchEvent.TOUCH_UP)
 				continue;
 
-			touchPoint.set(event.x * inputScaleX, Defines.viewPortHeight
+			touchPoint.set(event.x * inputScaleX, GameConstants.viewPortHeight
 					- event.y * inputScaleY);
 			if (OverlapTester.pointInRectangle(startBounds, touchPoint)) {
 				Assets.playSound(Assets.menuSelectionSound);

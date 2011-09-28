@@ -12,7 +12,7 @@ import com.efzgames.framework.Game;
 import com.efzgames.framework.Input.TouchEvent;
 import com.efzgames.framework.impl.SpriteText;
 import com.efzgames.ninjaacademy.Assets;
-import com.efzgames.ninjaacademy.Defines;
+import com.efzgames.ninjaacademy.GameConstants;
 
 public class HighScoreScreen extends GameScreen{
 	

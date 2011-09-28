@@ -4,7 +4,7 @@ import com.efzgames.framework.Game;
 import com.efzgames.framework.gl.Camera2D;
 import com.efzgames.framework.gl.SpriteBatcher;
 import com.efzgames.framework.impl.GLScreen;
-import com.efzgames.ninjaacademy.Defines;
+import com.efzgames.ninjaacademy.GameConstants;
 
 
 
@@ -15,8 +15,8 @@ public abstract class GameScreen extends GLScreen{
 	public GameScreen(Game game) {
 		super(game);
 
-		guiCam = new Camera2D(glGraphics, Defines.viewPortWidth,
-				Defines.viewPortHeight);
+		guiCam = new Camera2D(glGraphics, GameConstants.viewPortWidth,
+				GameConstants.viewPortHeight);
 		batcher = new SpriteBatcher(glGraphics, 10);
 	}
 	

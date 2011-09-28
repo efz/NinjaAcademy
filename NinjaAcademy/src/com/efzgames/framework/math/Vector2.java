@@ -73,6 +73,13 @@ public class Vector2 {
         return newVec;
     }
     
+    public static Vector2 div(Vector2 vec,float scalar) {
+    	Vector2 newVec = new Vector2();
+    	newVec.x = vec.x / scalar;
+    	newVec.y = vec.y / scalar;
+        return newVec;
+    }
+    
     public float len() {               
         return FloatMath.sqrt(x*x + y*y);
     }

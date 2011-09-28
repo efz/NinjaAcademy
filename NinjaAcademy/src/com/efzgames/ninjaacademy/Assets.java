@@ -59,6 +59,8 @@ public class Assets {
 	public static Texture fullHeart;
 	public static TextureRegion emptyHeartRegion;
 	public static TextureRegion fullHeartRegion;
+	public static Texture bamboo;
+	public static TextureRegion bambooRegion;
 	
 	public static void load(GLGame game) {
 
@@ -99,6 +101,8 @@ public class Assets {
 		fullHeart = new Texture(game, "textures/elements/heart.png", false);
 		emptyHeartRegion = new TextureRegion(emptyHeart,0,0,49,39);
 		fullHeartRegion = new TextureRegion(fullHeart,0,0,49,39);
+		bamboo = new Texture(game, "textures/elements/bamboo.png", false);
+		bambooRegion = new TextureRegion(bamboo,0,0,41,184);
 	}
 	
 	public static void reload() {
@@ -118,6 +122,7 @@ public class Assets {
 		// Game Elements
 		emptyHeart.reload();
 		fullHeart.reload();
+		bamboo.reload();
 	}
 	
 	public static void playSound(Sound sound) {		

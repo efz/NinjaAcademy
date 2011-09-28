@@ -2,11 +2,16 @@ package com.efzgames.ninjaacademy.elements;
 
 import com.efzgames.framework.gl.SpriteBatcher;
 import com.efzgames.framework.impl.GLGame;
+import com.efzgames.framework.math.Vector2;
+
+
 
 public abstract class GameComponent {	
 	
-	public boolean IsEnabled = false;
-	public boolean IsVisible = false;
+	public boolean isEnabled = false;
+	public boolean isVisible = false;
+	
+	public Vector2 position;
 	
 	protected GLGame glGame;
 	
