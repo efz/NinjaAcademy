@@ -19,6 +19,18 @@ public abstract class TexturedDrawableGameComponent extends GameComponent {
      public Vector2 position;
      
      public Vector2 visualCenter;
+     
+     public Vector2 getBoundingBoxMin(){
+    	 return new Vector2( position.x , position.y);
+     }
+     
+     public Vector2 getBoundingBoxMax(){
+    	 return new Vector2( position.x +texture.width, position.y + texture.height);
+     }
+     
+     public float getBoundingHeight(){
+    	 return texture.height;
+     }
 	
 	public TexturedDrawableGameComponent(GLGame glGame, GameScreen gameScreen, Texture texture, TextureRegion textureRegion) {
 		super(glGame);

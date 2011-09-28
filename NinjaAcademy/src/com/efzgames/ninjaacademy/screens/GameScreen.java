@@ -11,6 +11,8 @@ import com.efzgames.ninjaacademy.GameConstants;
 public abstract class GameScreen extends GLScreen{
 	Camera2D guiCam;
 	SpriteBatcher batcher;
+	protected float inputScaleX;
+	protected float inputScaleY;
 	
 	public GameScreen(Game game) {
 		super(game);
@@ -18,6 +20,11 @@ public abstract class GameScreen extends GLScreen{
 		guiCam = new Camera2D(glGraphics, GameConstants.viewPortWidth,
 				GameConstants.viewPortHeight);
 		batcher = new SpriteBatcher(glGraphics, 10);
+		
+		inputScaleX = (float) GameConstants.viewPortWidth
+				/ game.getGLGraphics().getWidth();
+		inputScaleY = (float) GameConstants.viewPortHeight
+				/ game.getGLGraphics().getHeight();
 	}
 	
 	@Override

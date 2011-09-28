@@ -1,14 +1,17 @@
 package com.efzgames.ninjaacademy.screens;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Point;
+import android.util.FloatMath;
 
 import com.efzgames.framework.Game;
+import com.efzgames.framework.Input.TouchEvent;
 import com.efzgames.framework.gl.Animation;
 import com.efzgames.framework.math.Vector2;
 import com.efzgames.ninjaacademy.Assets;
@@ -20,10 +23,19 @@ import com.efzgames.ninjaacademy.elements.GameComponent;
 import com.efzgames.ninjaacademy.elements.HitPointsComponent;
 import com.efzgames.ninjaacademy.elements.LaunchedComponent;
 import com.efzgames.ninjaacademy.elements.ScoreComponent;
+import com.efzgames.ninjaacademy.elements.SwordSlash;
 import com.efzgames.ninjaacademy.NinjaAcademy;
 
 public class GameplayScreen  extends GameScreen {
 	
+	static final float closeDragDistance = 25;
+
+
+    static final float audibleDragDistance = 10;
+     
+	final float swordSlashCheckInterval = 0.100f;
+    private float swordSlashCheckTimer;
+    
 	 // Constants
     private static final int maxThrowingStars = 10;
     private static final int maxSwordSlashes = 3;
@@ -62,6 +74,14 @@ public class GameplayScreen  extends GameScreen {
     //Stack<Target> lowerTargetComponents;
     private float lowerTargetTimer;
     //List<Target> lowerTargetsInMotion;
+    
+    int swordSlashIndex = 0;
+    SwordSlash[] swordSlashComponents;
+    Vector2 swordSlashOrigin;
+    SwordSlash activeSwordSlash;
+    
+   // Gesture recognition related variables
+   private Vector2 dragPosition = null;
 
     
     Random random;
@@ -77,11 +97,75 @@ public class GameplayScreen  extends GameScreen {
         switchConfigurationPhase();
         
 		createHUDComponents();
+		createSwordSlashes();
 		createLaunchedComponents();
 	}
 	
+	private void handleDrag(TouchEvent gesture)
+    {
+        float dragDistance = 0;
+
+        // Handle a new drag sequence
+        if (dragPosition == null)
+        {
+            swordSlashOrigin = new Vector2(gesture.x * this.inputScaleX, GameConstants.viewPortHeight - gesture.y * this.inputScaleY) ;
+            swordSlashCheckTimer = 0;
+            activeSwordSlash = getSwordSlash();
+            activeSwordSlash.setStretch(0);
+            activeSwordSlash.reset();
+        }
+        else
+        {
+            dragDistance = FloatMath.sqrt((gesture.x * this.inputScaleX - dragPosition.x) *(gesture.x * this.inputScaleX - dragPosition.x)
+            		+((GameConstants.viewPortHeight - gesture.y * this.inputScaleY) - dragPosition.y)*
+            		((GameConstants.viewPortHeight -gesture.y * this.inputScaleY) - dragPosition.y));
+
+            // Reset the sword slash timer for each significant drag
+            if (dragDistance > closeDragDistance)
+            {
+                swordSlashCheckTimer = 0;
+            }
+        }
+
+        dragPosition = new Vector2(gesture.x * this.inputScaleX, GameConstants.viewPortHeight - gesture.y * this.inputScaleY);
+
+        activeSwordSlash.positionSlash(swordSlashOrigin, dragPosition);
+
+        if (!sliceComponents(swordSlashOrigin, dragPosition) && dragDistance > audibleDragDistance)
+        {
+            Assets.playSound(Assets.swordSlashSound);
+        }
+    }
+	
+	 private boolean sliceComponents(Vector2 origin, Vector2 destination)
+     {
+         return false;          
+     }
+	
+	 private SwordSlash getSwordSlash()
+     {
+         SwordSlash result = swordSlashComponents[swordSlashIndex++];
+
+         if (swordSlashIndex >= maxSwordSlashes)
+         {
+             swordSlashIndex = 0;
+         }
+
+         return result;
+     }
+	
 	@Override
 	public void update(float deltaTime) {
+		
+		List<TouchEvent> events = game.getInput().getTouchEvents();
+		int len = events.size();
+
+		for (int i = 0; i < len; i++) {
+			TouchEvent event = events.get(i);
+			if (event.type == TouchEvent.TOUCH_DRAGGED){
+				handleDrag(event);				
+			}
+		}
 	
 		for(GameComponent comp: ((NinjaAcademy)game).components){
 			if(!comp.isEnabled)
@@ -89,6 +173,19 @@ public class GameplayScreen  extends GameScreen {
 			
 			comp.update(deltaTime);
 		}
+		
+		// Make the currently displayed sword slash fade if necessary 
+        if (dragPosition != null)
+        {                                
+            swordSlashCheckTimer += deltaTime;
+
+            if (swordSlashCheckTimer >= swordSlashCheckInterval)
+            {
+                activeSwordSlash.fade(GameConstants.swordSlashFadeDuration);
+
+                dragPosition = null;
+            }
+        }
 		
 		manageGamePhase(deltaTime);
 	}
@@ -348,6 +445,24 @@ public class GameplayScreen  extends GameScreen {
         else
         {
            // MarkGameOver();
+        }
+    }
+    
+    
+    private void createSwordSlashes()
+    {
+        swordSlashComponents = new SwordSlash[maxThrowingStars];
+
+        for (int i = 0; i < maxSwordSlashes; i++)
+        {
+            SwordSlash swordSlash = new SwordSlash(glGame, this, Assets.slice, Assets.sliceRegion);
+           
+            swordSlash.isVisible = false;
+            swordSlash.isEnabled = false;
+
+            swordSlashComponents[i] = swordSlash;
+
+            ((NinjaAcademy)game).components.add(swordSlash);
         }
     }
 }

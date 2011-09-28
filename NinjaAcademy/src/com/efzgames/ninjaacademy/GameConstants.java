@@ -8,4 +8,6 @@ public class GameConstants {
 	
 	public static final Vector2 launchAcceleration = new Vector2(0, -500);
 	public static final float offScreenYCoordinate = -250;
+	
+	public static final float swordSlashFadeDuration = 0.150f;
 }

@@ -66,6 +66,13 @@ public class Vector2 {
         return this;
     }
     
+    public static Vector2 sub(Vector2 vec1,Vector2 vec2) {
+    	Vector2 newVec = new Vector2();
+    	newVec.x = vec1.x - vec2.x;
+    	newVec.y = vec1.y - vec2.y;
+        return newVec;
+    }
+    
     public static Vector2 mul(Vector2 vec,float scalar) {
     	Vector2 newVec = new Vector2();
     	newVec.x = vec.x * scalar;
@@ -78,6 +85,11 @@ public class Vector2 {
     	newVec.x = vec.x / scalar;
     	newVec.y = vec.y / scalar;
         return newVec;
+    }
+    
+    public static float dot(Vector2 vec1,Vector2 vec2) {
+    	float dotProduct = vec1.x*vec2.x + vec1.y*vec2.y;
+    	return dotProduct;
     }
     
     public float len() {               
