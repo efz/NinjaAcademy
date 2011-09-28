@@ -49,6 +49,7 @@ public class Assets {
 	public static final int menuTextHeight = 60;
 	
 	public static Sound menuSelectionSound;
+	public static Sound fuseSound;
 	public static Music ninjaAcademyMusic;
 	
 	public static Typeface moireFont;
@@ -61,6 +62,8 @@ public class Assets {
 	public static TextureRegion fullHeartRegion;
 	public static Texture bamboo;
 	public static TextureRegion bambooRegion;
+	public static Texture dynamite;
+	public static TextureRegion dynamiteRegion;
 	
 	public static void load(GLGame game) {
 
@@ -92,6 +95,7 @@ public class Assets {
 		exitText = new SpriteText(game, "Exit", moireFont, 48, Color.WHITE, Color.BLACK,  exitTextWidth, 
 				menuTextHeight);
 		
+		fuseSound = game.getAudio().newSound("audios/Fuse.ogg");
 		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
 		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
 		Assets.ninjaAcademyMusic.setLooping(true);
@@ -103,6 +107,8 @@ public class Assets {
 		fullHeartRegion = new TextureRegion(fullHeart,0,0,49,39);
 		bamboo = new Texture(game, "textures/elements/bamboo.png", false);
 		bambooRegion = new TextureRegion(bamboo,0,0,41,184);
+		dynamite = new Texture(game, "textures/elements/dynamite.png", false);
+		dynamiteRegion = new TextureRegion(dynamite,0,0,54,117);
 	}
 	
 	public static void reload() {
@@ -123,6 +129,7 @@ public class Assets {
 		emptyHeart.reload();
 		fullHeart.reload();
 		bamboo.reload();
+		dynamite.reload();
 	}
 	
 	public static void playSound(Sound sound) {		

@@ -6,7 +6,10 @@ import java.util.Stack;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.Point;
+
 import com.efzgames.framework.Game;
+import com.efzgames.framework.gl.Animation;
 import com.efzgames.framework.math.Vector2;
 import com.efzgames.ninjaacademy.Assets;
 import com.efzgames.ninjaacademy.GameConstants;
@@ -159,7 +162,7 @@ public class GameplayScreen  extends GameScreen {
             bamboo.droppedPastHeight = new EventHandler(){
             	@Override
             	public void onEvent(GameComponent source){
-            		BambooDroppedOutOfScreen((LaunchedComponent)source);
+            		bambooDroppedOutOfScreen((LaunchedComponent)source);
             	}
             };
 
@@ -169,30 +172,32 @@ public class GameplayScreen  extends GameScreen {
         }
         
         // Create dynamites
-//        dynamiteComponents = new Stack<LaunchedComponent>();
-//
-//        for (int i = 0; i < maxDynamites; i++)
-//        {
-//            LaunchedComponent dynamite = new LaunchedComponent(ScreenManager.Game, this,
-//                new Animation(animationStore["Dynamite"]))
-//            {
-//                DrawOrder = GameConstants.DefaultDrawOrder,
-//                Visible = false,
-//                Enabled = false,
-//                NotifyHeight = GameConstants.OffScreenYCoordinate
-//            };
-//
-//            dynamite.DroppedPastHeight += new EventHandler(DynamiteDroppedOutOfScreen);
-//
-//            dynamiteComponents.Push(dynamite);
-//
-//            ScreenManager.Game.Components.Add(dynamite);
-//        }
+        dynamiteComponents = new Stack<LaunchedComponent>();
+
+        for (int i = 0; i < maxDynamites; i++)
+        {
+            LaunchedComponent dynamite = new LaunchedComponent(glGame, this,  new Animation(Assets.dynamite, new Point(27,117), 2
+            		, new Vector2(9, 69), true, 0.250f));
+            dynamite.isVisible = false;
+            dynamite.isEnabled = false;
+            dynamite.notifyHeight = GameConstants.offScreenYCoordinate;
+       
+            dynamite.droppedPastHeight = new EventHandler(){
+            	@Override
+            	public void onEvent(GameComponent source){
+            		dynamiteDroppedOutOfScreen((LaunchedComponent)source);
+            	}
+            };         
+
+            dynamiteComponents.push(dynamite);
+
+            ((NinjaAcademy)game).components.add(dynamite);
+        }
     	    	
     }
     
  
-    void BambooDroppedOutOfScreen(LaunchedComponent bamboo)
+    void bambooDroppedOutOfScreen(LaunchedComponent bamboo)
     {
         bamboo.isEnabled = false;
         bamboo.isVisible = false;
@@ -207,6 +212,15 @@ public class GameplayScreen  extends GameScreen {
         {
             //MarkGameOver();
         }
+    }
+    
+    void dynamiteDroppedOutOfScreen(LaunchedComponent dynamite)
+    {    
+        dynamite.isEnabled = false;
+        dynamite.isVisible = false;
+
+        dynamiteComponents.push(dynamite);
+        inAirDynamiteComponents.remove(dynamite);
     }
     
     public int getHitPoints(){
@@ -229,6 +243,7 @@ public class GameplayScreen  extends GameScreen {
         }
         
     	managePhaseBamboos(gameTime);
+    	managePhaseDynamites(gameTime);
     }
     
     private void managePhaseBamboos(float gameTime){
@@ -251,6 +266,55 @@ public class GameplayScreen  extends GameScreen {
                  launchedBamboo.isVisible = true;
              }
          }
+    }
+    
+    private void managePhaseDynamites(float gameTime)
+    {
+        dynamiteTimer +=gameTime;
+
+        if (dynamiteTimer >= currentPhase.dynamiteAppearanceInterval)
+        {
+            dynamiteTimer = 0;
+
+            if (dynamiteComponents.size() > 0 && random.nextDouble() <= currentPhase.dynamiteAppearanceProbablity)
+            {
+                int dynamiteAmount = getDynamiteAmount();
+                dynamiteAmount = Math.min(dynamiteAmount, dynamiteComponents.size());
+
+                Assets.playSound(Assets.fuseSound);
+
+                for (int i = 0; i < dynamiteAmount; i++)
+                {
+                    LaunchedComponent launchedDynamite = dynamiteComponents.pop();
+                    inAirDynamiteComponents.add(launchedDynamite);
+
+                    Vector2 launchSpeed = getLaunchSpeed();
+
+                    launchedDynamite.Launch(getLaunchPosition(), launchSpeed, GameConstants.launchAcceleration,
+                        getLaunchRotation(launchSpeed));
+                    launchedDynamite.isEnabled = true;
+                    launchedDynamite.isVisible = true;
+                }
+            }
+        }
+    }
+    
+    private int getDynamiteAmount()
+    {
+        double randomNumber = random.nextDouble();
+
+        double totalProbability = 0;
+
+        for (int i = 0; i < currentPhase.dynamiteAmountProbabilities.length; i++)
+        {
+            totalProbability += currentPhase.dynamiteAmountProbabilities[i];
+            if (randomNumber <= totalProbability)
+            {
+                return i + 1;
+            }
+        }
+
+        return currentPhase.dynamiteAmountProbabilities.length;
     }
     
     private Vector2 getLaunchSpeed()

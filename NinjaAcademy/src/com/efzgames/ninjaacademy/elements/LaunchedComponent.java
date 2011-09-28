@@ -1,5 +1,6 @@
 package com.efzgames.ninjaacademy.elements;
 
+import com.efzgames.framework.gl.Animation;
 import com.efzgames.framework.gl.SpriteBatcher;
 import com.efzgames.framework.gl.Texture;
 import com.efzgames.framework.gl.TextureRegion;
@@ -7,7 +8,7 @@ import com.efzgames.framework.impl.GLGame;
 import com.efzgames.framework.math.Vector2;
 import com.efzgames.ninjaacademy.screens.GameScreen;
 
-public class LaunchedComponent extends TexturedDrawableGameComponent {
+public class LaunchedComponent extends AnimatedComponent {
 
 	// / Angular velocity in radians per second.
 	public float angularVelocity;
@@ -29,9 +30,18 @@ public class LaunchedComponent extends TexturedDrawableGameComponent {
 		super(glGame, gameScreen, texture, textureRegion);
 
 	}
+	
+	public LaunchedComponent(GLGame glGame, GameScreen gameScreen,
+			Animation animation) {
+		super(glGame, gameScreen, animation);
+
+	}
 
 	@Override
 	public void update(float deltaTime) {
+		
+		super.update(deltaTime);
+		
 		float elapsedSeconds = deltaTime;
 		velocity = velocity.add(Vector2.mul(acceleration, elapsedSeconds));
 		position = position.add(Vector2.mul(velocity, elapsedSeconds));
@@ -52,7 +62,10 @@ public class LaunchedComponent extends TexturedDrawableGameComponent {
 	@Override
 	public void present(float deltaTime, SpriteBatcher batcher) {
 		batcher.beginBatch(texture);
-		batcher.drawSprite(position.x - halfTextureDimensions.x, position.y
+		if(animation != null)
+			animation.present(deltaTime, batcher, position, rotation, visualCenter);
+		else
+			batcher.drawSprite(position.x - halfTextureDimensions.x, position.y
 				+ halfTextureDimensions.y, texture.width, texture.height,
 				rotation * Vector2.TO_DEGREES, textureRegion);
 		batcher.endBatch();
@@ -73,5 +86,5 @@ public class LaunchedComponent extends TexturedDrawableGameComponent {
 		this.angularVelocity = angularVelocity;
 		isEventFired = false;
 	}
-
+	
 }
