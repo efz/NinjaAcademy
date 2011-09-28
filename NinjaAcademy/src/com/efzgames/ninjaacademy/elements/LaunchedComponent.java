@@ -61,13 +61,9 @@ public class LaunchedComponent extends AnimatedComponent {
 
 	@Override
 	public void present(float deltaTime, SpriteBatcher batcher) {
+		
 		batcher.beginBatch(texture);
-		if(animation != null)
-			animation.present(deltaTime, batcher, position, rotation, visualCenter);
-		else
-			batcher.drawSprite(position.x - halfTextureDimensions.x, position.y
-				+ halfTextureDimensions.y, texture.width, texture.height,
-				rotation * Vector2.TO_DEGREES, textureRegion);
+		animation.present(deltaTime, batcher, position, rotation, visualCenter);
 		batcher.endBatch();
 	}
 	

@@ -35,14 +35,13 @@ public class AnimatedComponent extends TexturedDrawableGameComponent{
 	public AnimatedComponent(GLGame glGame, GameScreen gameScreen,
 			Texture texture, TextureRegion textureRegion) {
 		
-		super(glGame, gameScreen, texture, textureRegion);
-//		this(glGame, gameScreen, new Animation(texture, new Point(texture.width, texture.height), 1, 
-//                new Vector2(texture.width/2f, texture.height/2f) , false));
+		this(glGame, gameScreen, new Animation(texture, new Point(texture.width, texture.height), 1, 
+                new Vector2(texture.width/2f, texture.height/2f) , false, 0));
 	}
 
 	@Override
 	public void update(float deltaTime) {	
-		if(animation != null)
+		//if(animation != null)
 			animation.update(deltaTime);
 	}
 

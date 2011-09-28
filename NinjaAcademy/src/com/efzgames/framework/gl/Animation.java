@@ -47,7 +47,7 @@ public class Animation {
     	keyFrames = new TextureRegion[frameCount];
     	
     	for(int i=0; i< frameCount; i++){
-    		TextureRegion region = new TextureRegion(animationSheet,frameDimensions.x * i, frameDimensions.y * i,
+    		TextureRegion region = new TextureRegion(animationSheet,frameDimensions.x * i, 0,
     				frameDimensions.x, frameDimensions.y);
     		keyFrames[i] = region;
     	}
@@ -57,8 +57,9 @@ public class Animation {
     public void update(float deltaTime) {
     	 if (isActive)
          {
+    		 frameChangeTimer += deltaTime;
     		 // See if it is time to advance to the next frame
-             if (frameChangeTimer >= frameChangeInterval)
+             if (frameChangeInterval > 0 && frameChangeTimer >= frameChangeInterval)
              {
                  frameChangeTimer = 0;              
 
