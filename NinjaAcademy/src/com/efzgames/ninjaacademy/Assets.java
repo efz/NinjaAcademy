@@ -79,6 +79,14 @@ public class Assets {
 	public static TextureRegion rightSliceRegione;
 	public static Texture explosion;
 	public static TextureRegion explosionRegion;
+	public static Texture goldtarget;
+	public static TextureRegion goldtargetRegion;
+	public static Texture fallingtarget;
+	public static TextureRegion fallingtargetRegion;
+	public static Texture fallinggoldtarget;
+	public static TextureRegion fallinggoldtargetRegion;
+	public static Texture target;
+	public static TextureRegion targetRegion;
 	
 	public static void load(GLGame game) {
 
@@ -139,6 +147,14 @@ public class Assets {
 		rightSliceRegione = new TextureRegion(slice,0,0,20,184);
 		explosion = new Texture(game, "textures/elements/Explosion.png", false);
 		explosionRegion = new TextureRegion(slice,0,0,240,40);
+		goldtarget = new Texture(game, "textures/elements/gold_target.png", false);
+		goldtargetRegion = new TextureRegion(slice,0,0,684,58);	
+		fallingtarget = new Texture(game, "textures/elements/targetFalling.png", false);
+		fallingtargetRegion = new TextureRegion(slice,0,0,456,58);	
+		fallinggoldtarget = new Texture(game, "textures/elements/GoldTargetFalling.png", false);
+		fallinggoldtargetRegion = new TextureRegion(slice,0,0,456,58);
+		target = new Texture(game, "textures/elements/target.png", false);
+		targetRegion = new TextureRegion(slice,0,0,57,58);
 	}
 	
 	public static void reload() {
@@ -166,6 +182,10 @@ public class Assets {
 		leftSlice.reload();
 		rightSlice.reload();
 		explosion.reload();
+		goldtarget.reload();
+		fallingtarget.reload();
+		fallinggoldtarget.reload();
+		target.reload();
 	}
 	
 	public static void playSound(Sound sound) {		

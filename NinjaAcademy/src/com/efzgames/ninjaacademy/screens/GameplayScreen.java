@@ -28,6 +28,9 @@ import com.efzgames.ninjaacademy.elements.HitPointsComponent;
 import com.efzgames.ninjaacademy.elements.LaunchedComponent;
 import com.efzgames.ninjaacademy.elements.ScoreComponent;
 import com.efzgames.ninjaacademy.elements.SwordSlash;
+import com.efzgames.ninjaacademy.elements.Target;
+import com.efzgames.ninjaacademy.elements.StraightLineMovementComponent;
+import com.efzgames.ninjaacademy.elements.TargetPosition;
 import com.efzgames.ninjaacademy.NinjaAcademy;
 
 public class GameplayScreen  extends GameScreen {
@@ -76,17 +79,26 @@ public class GameplayScreen  extends GameScreen {
     private float dynamiteTimer;
     
 
-    //Stack<Target> upperTargetComponents;
-    private float upperTargetTimer;
-    //List<Target> upperTargetsInMotion;
+    Stack<Target> upperTargetComponents;
+    float upperTargetTimer;
+    List<Target> upperTargetsInMotion;
 
-    //Stack<Target> middleTargetComponents;
-    private float middleTargetTimer;
-    //List<Target> middleTargetsInMotion;
+    Stack<Target> middleTargetComponents;
+    float middleTargetTimer;
+    List<Target> middleTargetsInMotion;
 
-    //Stack<Target> lowerTargetComponents;
-    private float lowerTargetTimer;
-    //List<Target> lowerTargetsInMotion;
+    Stack<Target> lowerTargetComponents;
+    float lowerTargetTimer;
+    List<Target> lowerTargetsInMotion;
+
+    Stack<Target> goldTargetComponents;
+    List<Target> goldTargetsInMotion;
+
+    int fallingTargetIndex = 0;
+    LaunchedComponent[] fallingTargetComponents;
+
+    int fallingGoldTargetIndex = 0;
+    LaunchedComponent[] fallingGoldTargetComponents;
     
     int swordSlashIndex = 0;
     SwordSlash[] swordSlashComponents;
@@ -103,17 +115,23 @@ public class GameplayScreen  extends GameScreen {
     
     private int explosionIndex = 0;
     private DisappearingAnimationComponent[] explosionComponents;
+    
+    
+   
 	
 	public GameplayScreen(Game game) {
 		super(game);
-		
+		 
 		random = new Random();
 		
 		gamePhasesPassed = -1;
-        switchConfigurationPhase();
-        
+        switchConfigurationPhase();      
+       
 		createHUDComponents();
 		createSwordSlashes();
+		
+		createTargetComponents();
+		 
 		createLaunchedComponents();
 		createBambooSliceComponents();
 		createExplosionComponents();
@@ -172,6 +190,160 @@ public class GameplayScreen  extends GameScreen {
          }
 
          return result;
+     }
+	 
+	 
+	 private void createTargetComponents()
+     {            
+         upperTargetComponents = new Stack<Target>();
+         middleTargetComponents = new Stack<Target>();
+         lowerTargetComponents = new Stack<Target>();
+         goldTargetComponents = new Stack<Target>();
+
+         upperTargetsInMotion = new ArrayList<Target>(maxConveyerTargets);
+         middleTargetsInMotion = new ArrayList<Target>(maxConveyerTargets);
+         lowerTargetsInMotion = new ArrayList<Target>(maxConveyerTargets);
+         goldTargetsInMotion = new ArrayList<Target>(maxConveyerTargets);
+
+         fallingTargetComponents = new LaunchedComponent[ maxFallingTargets];
+         fallingGoldTargetComponents = new LaunchedComponent[maxFallingGoldTargets];
+
+         // Create conveyer belt targets
+         for (int i = 0; i < maxConveyerTargets; i++)
+         {
+             upperTargetComponents.push(getNewConveyerTarget(TargetPosition.Upper));
+             middleTargetComponents.push(getNewConveyerTarget(TargetPosition.Middle));
+             lowerTargetComponents.push(getNewConveyerTarget(TargetPosition.Lower));
+
+             ((NinjaAcademy)game).components.add(upperTargetComponents.peek());
+             ((NinjaAcademy)game).components.add(middleTargetComponents.peek());
+             ((NinjaAcademy)game).components.add(lowerTargetComponents.peek());
+         }
+
+         // Create golden targets
+         for (int i = 0; i < maxGoldTargets; i++)
+         {
+             Target goldTarget = new Target(glGame, this, new Animation(Assets.goldtarget, new Point(57,58), 12
+             		, new Vector2(29, 29), true, 0.500f) );
+            
+             goldTarget.isVisible = false;
+             goldTarget.isEnabled = false;
+             goldTarget.isGolden = true;
+             goldTarget.designation = TargetPosition.Anywhere;
+     
+             goldTarget.finishedMoving = new EventHandler(){
+               	@Override
+               	public void onEvent(GameComponent source){
+               		targetFinishedMoving(source);
+               	}
+               };
+             
+
+             goldTargetComponents.push(goldTarget);
+
+             ((NinjaAcademy)game).components.add(goldTarget);
+         }
+
+         // Create falling targets
+         for (int i = 0; i < maxFallingTargets; i++)
+         {
+             LaunchedComponent fallingTarget = new LaunchedComponent(glGame,
+                 this, new Animation(Assets.fallingtarget, new Point(57,58), 8
+                  		, new Vector2(29, 29), false, 0.750f));
+             fallingTarget.isVisible = false;
+             fallingTarget.isEnabled = false;                   
+             fallingTarget.notifyHeight = GameConstants.offScreenYCoordinate;
+         
+
+             fallingTarget.droppedPastHeight = new EventHandler(){
+              	@Override
+              	public void onEvent(GameComponent source){
+              		fallingTargetDroppedOutOfScreen((LaunchedComponent)source);
+              	}
+              };
+
+             fallingTargetComponents[i] = fallingTarget;
+
+             ((NinjaAcademy)game).components.add(fallingTarget);
+         }
+
+         // Create golden falling targets
+         for (int i = 0; i < maxFallingGoldTargets; i++)
+         {
+             LaunchedComponent fallingGoldTarget = new LaunchedComponent(glGame,
+                 this, new Animation(Assets.fallinggoldtarget, new Point(57,58), 8
+                   		, new Vector2(29, 29), false, 0.750f));
+             
+             fallingGoldTarget.isVisible = false;
+             fallingGoldTarget.isEnabled = false;
+             fallingGoldTarget.notifyHeight = GameConstants.offScreenYCoordinate;
+           
+
+             fallingGoldTarget.droppedPastHeight = new EventHandler(){
+             	@Override
+             	public void onEvent(GameComponent source){
+             		fallingTargetDroppedOutOfScreen((LaunchedComponent)source);
+             	}
+             };
+
+             fallingGoldTargetComponents[i] = fallingGoldTarget;
+
+             ((NinjaAcademy)game).components.add(fallingGoldTarget);
+         }
+     }
+	 
+	  private Target getNewConveyerTarget(TargetPosition targetPosition)
+      {
+          Target newTarget = new Target(glGame, this, Assets.target, Assets.targetRegion);
+       
+          newTarget.isVisible = false;
+          newTarget.isEnabled = false;
+          newTarget.isGolden = false;
+          newTarget.designation = targetPosition;    
+
+          newTarget.finishedMoving = new EventHandler(){
+             	@Override
+             	public void onEvent(GameComponent source){
+             		targetFinishedMoving(source);
+             	}
+             };
+
+          return newTarget;
+      }
+	 
+     void targetFinishedMoving(GameComponent sender)
+     {
+         Target target = (Target)sender;
+         target.isEnabled = false;
+         target.isVisible = false;
+
+         switch (target.designation)
+         {
+             case Upper:
+                 upperTargetComponents.push(target);
+                 upperTargetsInMotion.remove(target);
+                 break;
+             case Middle:
+                 middleTargetComponents.push(target);
+                 middleTargetsInMotion.remove(target);
+                 break;
+             case Lower:
+                 lowerTargetComponents.push(target);
+                 lowerTargetsInMotion.remove(target);
+                 break;
+             case Anywhere:
+                 goldTargetComponents.push(target);
+                 goldTargetsInMotion.remove(target);
+                 break;
+             default:
+                 break;
+         }
+     }
+	 
+	 void fallingTargetDroppedOutOfScreen(LaunchedComponent fallingTarget)
+     {
+         fallingTarget.isEnabled = false;
+         fallingTarget.isVisible = false;
      }
 	
 	@Override
@@ -420,9 +592,76 @@ public class GameplayScreen  extends GameScreen {
             switchConfigurationPhase();
         }
         
+        // Manage the targets
+        upperTargetTimer += gameTime;
+        middleTargetTimer += gameTime;
+        lowerTargetTimer += gameTime;
+
+        upperTargetTimer = managePhaseTargets(gameTime, upperTargetTimer,
+            currentPhase.targetAppearanceIntervals[0], currentPhase.targetAppearanceProbabilities[0],
+            upperTargetComponents, GameConstants.upperTargetOrigin, GameConstants.upperTargetDestination);
+        middleTargetTimer = managePhaseTargets(gameTime, middleTargetTimer,
+            currentPhase.targetAppearanceIntervals[1], currentPhase.targetAppearanceProbabilities[1],
+            middleTargetComponents, GameConstants.middleTargetOrigin, GameConstants.middleTargetDestination);
+        lowerTargetTimer = managePhaseTargets(gameTime, lowerTargetTimer,
+            currentPhase.targetAppearanceIntervals[2], currentPhase.targetAppearanceProbabilities[2],
+            lowerTargetComponents, GameConstants.lowerTargetOrigin, GameConstants.lowerTargetDestination);
+        
     	managePhaseBamboos(gameTime);
     	managePhaseDynamites(gameTime);
     }
+    
+    private float managePhaseTargets(float gameTime, float timer, float interval, double probability,
+            Stack<Target> targetStack, Vector2 origin, Vector2 destination)
+        {
+            timer += gameTime;
+
+            if (timer >= interval)
+            {
+                timer = 0;
+
+                // Place a new target on the conveyer belt according to probability and if we haven't exceeded the
+                // maximal on-screen amount
+                if (targetStack.size() > 0 && random.nextDouble() <= probability)
+                {
+                    Target addedTarget;
+
+                    // Place a golden target instead if appropriate and we did not exceed the total amount
+                    if (goldTargetComponents.size() > 0 && random.nextDouble() <= currentPhase.goldTargetProbablity)
+                    {
+                        addedTarget = goldTargetComponents.pop();
+                    }
+                    else
+                    {
+                        addedTarget = targetStack.pop();
+                    }
+
+                    addedTarget.moveWithVelocity(GameConstants.targetSpeed, origin, destination);
+                    addedTarget.isEnabled = true;
+                    addedTarget.isVisible = true;
+
+                    switch (addedTarget.designation)
+                    {
+                        case Upper:
+                            upperTargetsInMotion.add(addedTarget);
+                            break;
+                        case Middle:
+                            middleTargetsInMotion.add(addedTarget);
+                            break;
+                        case Lower:
+                            lowerTargetsInMotion.add(addedTarget);
+                            break;
+                        case Anywhere:
+                            goldTargetsInMotion.add(addedTarget);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return timer;
+        }
     
     private void managePhaseBamboos(float gameTime){
     	bambooTimer += gameTime;

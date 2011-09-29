@@ -3,6 +3,8 @@ package com.efzgames.framework.math;
 import android.util.FloatMath;
 
 public class Vector2 {
+	public static final Vector2 zero = new Vector2(0, 0);
+	
     public static float TO_RADIANS = (1 / 180.0f) * (float)Math.PI;
     public static float TO_DEGREES = (1 / (float)Math.PI) * 180;
     public float x, y;
