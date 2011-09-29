@@ -25,6 +25,26 @@ public class AnimatedComponent extends TexturedDrawableGameComponent{
     	return animation.getFrameHeight();
     }
     
+    @Override
+    public Vector2 getBoundingBoxMin(){
+   	 return new Vector2( position.x , position.y);
+    }
+    
+    @Override
+    public Vector2 getBoundingBoxMax(){
+   	 return new Vector2( position.x +animation.getFrameWidth(), position.y + animation.getFrameHeight());
+    }
+    
+    @Override
+    public float getBoundingHeight(){
+   	 return animation.getFrameHeight();
+    }
+    
+    @Override
+    public float getBoundingWidth(){
+   	 return animation.getFrameWidth();
+    }
+    
     public AnimatedComponent(GLGame glGame, GameScreen gameScreen, Animation animation){
     	super(glGame, gameScreen, animation.animationSheet, null);
         this.animation = animation;

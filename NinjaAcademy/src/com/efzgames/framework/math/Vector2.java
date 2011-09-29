@@ -66,6 +66,13 @@ public class Vector2 {
         return this;
     }
     
+    public static Vector2 add(Vector2 vec1,Vector2 vec2) {
+    	Vector2 newVec = new Vector2();
+    	newVec.x = vec1.x + vec2.x;
+    	newVec.y = vec1.y + vec2.y;
+        return newVec;
+    }
+    
     public static Vector2 sub(Vector2 vec1,Vector2 vec2) {
     	Vector2 newVec = new Vector2();
     	newVec.x = vec1.x - vec2.x;
@@ -124,6 +131,21 @@ public class Vector2 {
         this.y = newY;
         
         return this;
+    }
+    
+    public static Vector2 rotate(Vector2 vec, float angle) {
+    	Vector2 newVec = new Vector2();
+        float rad = angle * TO_RADIANS;
+        float cos = FloatMath.cos(rad);
+        float sin = FloatMath.sin(rad);
+        
+        float newX = vec.x * cos - vec.y * sin;
+        float newY = vec.x * sin + vec.y * cos;
+        
+        newVec.x = newX;
+        newVec.y = newY;
+        
+        return newVec;
     }
 
     public float dist(Vector2 other) {

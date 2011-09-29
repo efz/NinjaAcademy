@@ -31,6 +31,10 @@ public abstract class TexturedDrawableGameComponent extends GameComponent {
      public float getBoundingHeight(){
     	 return texture.height;
      }
+     
+     public float getBoundingWidth(){
+    	 return texture.width;
+     }
 	
 	public TexturedDrawableGameComponent(GLGame glGame, GameScreen gameScreen, Texture texture, TextureRegion textureRegion) {
 		super(glGame);

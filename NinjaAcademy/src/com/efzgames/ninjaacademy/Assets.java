@@ -51,6 +51,7 @@ public class Assets {
 	public static Sound menuSelectionSound;
 	public static Sound fuseSound;
 	public static Sound swordSlashSound;
+	public static Sound bambooSliceSound;
 	public static Music ninjaAcademyMusic;
 	
 	public static Typeface moireFont;
@@ -67,6 +68,14 @@ public class Assets {
 	public static TextureRegion dynamiteRegion;
 	public static Texture slice;
 	public static TextureRegion sliceRegion;
+	public static Texture bottomSlice;
+	public static Texture topSlice;
+	public static Texture leftSlice;
+	public static Texture rightSlice;
+	public static TextureRegion bottomSliceRegion;
+	public static TextureRegion topSliceRegion;
+	public static TextureRegion leftSliceRegion;
+	public static TextureRegion rightSliceRegione;
 	
 	public static void load(GLGame game) {
 
@@ -101,6 +110,7 @@ public class Assets {
 		swordSlashSound = game.getAudio().newSound("audios/Sword_Slash.ogg");
 		fuseSound = game.getAudio().newSound("audios/Fuse.ogg");
 		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
+		bambooSliceSound = game.getAudio().newSound("audios/Bamboo_Slice.ogg");
 		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
 		Assets.ninjaAcademyMusic.setLooping(true);
 		
@@ -115,6 +125,14 @@ public class Assets {
 		dynamiteRegion = new TextureRegion(dynamite,0,0,54,117);
 		slice = new Texture(game, "textures/elements/slice.png", false);
 		sliceRegion = new TextureRegion(slice,0,0,14,81);
+		bottomSlice = new Texture(game, "textures/elements/bottomSliceHorizontal.png", false);
+		topSlice = new Texture(game, "textures/elements/topSliceHorizontal.png", false);
+		leftSlice = new Texture(game, "textures/elements/leftSliceVertical.png", false);
+		rightSlice = new Texture(game, "textures/elements/rightSliceVertical.png", false);
+		bottomSliceRegion = new TextureRegion(slice,0,0,41,92);
+		topSliceRegion = new TextureRegion(slice,0,0,41,92);
+		leftSliceRegion = new TextureRegion(slice,0,0,20,184);
+		rightSliceRegione = new TextureRegion(slice,0,0,20,184);
 	}
 	
 	public static void reload() {
@@ -137,6 +155,10 @@ public class Assets {
 		bamboo.reload();
 		dynamite.reload();
 		slice.reload();
+		bottomSlice.reload();
+		topSlice.reload();
+		leftSlice.reload();
+		rightSlice.reload();
 	}
 	
 	public static void playSound(Sound sound) {		

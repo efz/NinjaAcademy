@@ -5,6 +5,7 @@ import com.efzgames.framework.gl.SpriteBatcher;
 import com.efzgames.framework.gl.Texture;
 import com.efzgames.framework.gl.TextureRegion;
 import com.efzgames.framework.impl.GLGame;
+import com.efzgames.framework.math.Line;
 import com.efzgames.framework.math.Vector2;
 import com.efzgames.ninjaacademy.screens.GameScreen;
 
@@ -36,6 +37,42 @@ public class LaunchedComponent extends AnimatedComponent {
 		super(glGame, gameScreen, animation);
 
 	}
+	
+	@Override
+    public Vector2 getBoundingBoxMin(){
+		Vector2[] points = getCurrentBoundCornerPositions();
+		float minX= Float.MAX_VALUE, minY = Float.MAX_VALUE;
+		for(int i=0; i<4; i++){
+			if(points[i].x < minX)
+				minX = points[i].x;
+			if(points[i].y < minY)
+				minY = points[i].y;
+		}
+   	 	return new Vector2( minX , minY);
+    }
+    
+    @Override
+    public Vector2 getBoundingBoxMax(){
+    	Vector2[] points = getCurrentBoundCornerPositions();
+		float minX= Float.MIN_VALUE, minY = Float.MIN_VALUE;
+		for(int i=0; i<4; i++){
+			if(points[i].x < minX)
+				minX = points[i].x;
+			if(points[i].y < minY)
+				minY = points[i].y;
+		}
+   	 	return new Vector2( minX , minY);
+    }
+    
+    @Override
+    public float getBoundingHeight(){
+   	 return getBoundingBoxMax().y - getBoundingBoxMin().y;
+    }
+    
+    @Override
+    public float getBoundingWidth(){
+    	return getBoundingBoxMax().x - getBoundingBoxMin().x;
+    }
 
 	@Override
 	public void update(float deltaTime) {
@@ -82,5 +119,49 @@ public class LaunchedComponent extends AnimatedComponent {
 		this.angularVelocity = angularVelocity;
 		isEventFired = false;
 	}
+	
+	  public Line[] getEdges()
+      {
+          Vector2[] corners = getCurrentBoundCornerPositions();
+
+          Line[] result = new Line[4];
+          result[0] = new Line(corners[3], corners[2]);
+          result[1] = new Line(corners[2], corners[1]);
+          result[2] = new Line(corners[1], corners[0]);
+          result[3] = new Line(corners[0], corners[3]);
+
+          return result;
+      }
+	  
+	  protected Vector2[] getCurrentBoundCornerPositions()
+      {
+		 
+          Vector2[] result = new Vector2[4];                 
+          
+          Vector2[] unrotatedCornersAroundCenter = new Vector2[]
+          {
+              new Vector2(-super.getBoundingWidth() / 2, super.getBoundingHeight() / 2),
+              new Vector2(super.getBoundingWidth() / 2, super.getBoundingHeight() / 2),
+              new Vector2(super.getBoundingWidth() / 2, -super.getBoundingHeight() / 2),
+              new Vector2(-super.getBoundingWidth() / 2, -super.getBoundingHeight() / 2)
+          };
+
+          // Rotate the corners around (0, 0)
+          unrotatedCornersAroundCenter[0] = unrotatedCornersAroundCenter[0].rotate(rotation * Vector2.TO_DEGREES);
+          unrotatedCornersAroundCenter[1] = unrotatedCornersAroundCenter[1].rotate(rotation * Vector2.TO_DEGREES);
+          unrotatedCornersAroundCenter[2] = unrotatedCornersAroundCenter[2].rotate(rotation * Vector2.TO_DEGREES);
+          unrotatedCornersAroundCenter[3] = unrotatedCornersAroundCenter[3].rotate(rotation * Vector2.TO_DEGREES);
+                
+          result[0] = new Vector2(unrotatedCornersAroundCenter[0].x + position.x, 
+        		  unrotatedCornersAroundCenter[0].y + position.y);
+          result[1] = new Vector2(unrotatedCornersAroundCenter[1].x + position.x, 
+        		  unrotatedCornersAroundCenter[1].y + position.y);
+          result[2] = new Vector2(unrotatedCornersAroundCenter[2].x + position.x, 
+        		  unrotatedCornersAroundCenter[2].y + position.y);
+          result[3] = new Vector2(unrotatedCornersAroundCenter[3].x + position.x, 
+        		  unrotatedCornersAroundCenter[3].y + position.y);          
+
+          return result;
+      }
 	
 }

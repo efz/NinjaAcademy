@@ -13,6 +13,9 @@ import android.util.FloatMath;
 import com.efzgames.framework.Game;
 import com.efzgames.framework.Input.TouchEvent;
 import com.efzgames.framework.gl.Animation;
+import com.efzgames.framework.gl.Texture;
+import com.efzgames.framework.gl.TextureRegion;
+import com.efzgames.framework.math.Line;
 import com.efzgames.framework.math.Vector2;
 import com.efzgames.ninjaacademy.Assets;
 import com.efzgames.ninjaacademy.GameConstants;
@@ -50,6 +53,15 @@ public class GameplayScreen  extends GameScreen {
     private ArrayList<LaunchedComponent> inAirBambooComponents;
     private float bambooTimer = 0;
     private ArrayList<LaunchedComponent> inAirDynamiteComponents;
+    
+    private int bambooTopSliceIndex = 0;
+    private LaunchedComponent[] bambooTopSlices;
+    private int bambooBottomSliceIndex = 0;
+    private LaunchedComponent[] bambooBottomSlices;
+    private int bambooLeftSliceIndex = 0;
+    private LaunchedComponent[] bambooLeftSlices;
+    private int bambooRightSliceIndex = 0;
+    private LaunchedComponent[] bambooRightSlices;
     
     private Stack<LaunchedComponent> bambooComponents;
     private Stack<LaunchedComponent> dynamiteComponents;
@@ -99,6 +111,7 @@ public class GameplayScreen  extends GameScreen {
 		createHUDComponents();
 		createSwordSlashes();
 		createLaunchedComponents();
+		createBambooSliceComponents();
 	}
 	
 	private void handleDrag(TouchEvent gesture)
@@ -139,7 +152,9 @@ public class GameplayScreen  extends GameScreen {
 	
 	 private boolean sliceComponents(Vector2 origin, Vector2 destination)
      {
-         return false;          
+		 Line sliceLine = new Line(origin, destination);
+
+         return sliceBamboo(sliceLine);// || sliceDynamite(sliceLine);           
      }
 	
 	 private SwordSlash getSwordSlash()
@@ -320,6 +335,47 @@ public class GameplayScreen  extends GameScreen {
         inAirDynamiteComponents.remove(dynamite);
     }
     
+    private void createBambooSliceComponents()
+    {
+    	bambooTopSlices = createBambooSliceComponets(Assets.topSlice ,Assets.topSliceRegion);
+    	bambooBottomSlices = createBambooSliceComponets(Assets.bottomSlice ,Assets.bottomSliceRegion);
+    	bambooLeftSlices = createBambooSliceComponets(Assets.leftSlice ,Assets.leftSliceRegion);
+    	bambooRightSlices = createBambooSliceComponets(Assets.rightSlice ,Assets.rightSliceRegione);
+    }
+    
+    
+    private LaunchedComponent[] createBambooSliceComponets(Texture texture, TextureRegion region)
+    {
+    	LaunchedComponent[] componentArray = new LaunchedComponent[maxBambooSlices];
+
+        for (int i = 0; i < maxBambooSlices; i++)
+        {
+            LaunchedComponent slicedCompoent = new LaunchedComponent(glGame, this, texture, region);
+            slicedCompoent.isVisible = false;
+            slicedCompoent.isEnabled = false;
+            slicedCompoent.notifyHeight = GameConstants.offScreenYCoordinate;      
+
+            slicedCompoent.droppedPastHeight = new EventHandler(){
+            	@Override
+            	public void onEvent(GameComponent source){
+            		bambooSliceDroppedOutOfScreen((LaunchedComponent)source);
+            	}
+            };         
+
+            componentArray[i] = slicedCompoent;
+
+            ((NinjaAcademy)game).components.add(slicedCompoent);
+        }
+        
+        return componentArray;
+    }
+    
+    void bambooSliceDroppedOutOfScreen(LaunchedComponent bambooSlice)
+    {
+        bambooSlice.isEnabled = false;
+        bambooSlice.isVisible = false;
+    }
+    
     public int getHitPoints(){
     	return this.hitPointsComponent.currentHitPoints;
     }
@@ -464,5 +520,160 @@ public class GameplayScreen  extends GameScreen {
 
             ((NinjaAcademy)game).components.add(swordSlash);
         }
+    }
+    
+       
+    private boolean sliceBamboo(Line sliceLine)
+    {
+        boolean result = false;
+
+        for (int bambooIndex = 0; bambooIndex < inAirBambooComponents.size(); bambooIndex++)
+        {
+            LaunchedComponent bamboo = inAirBambooComponents.get(bambooIndex);
+
+            Line[] bambooEdges = bamboo.getEdges();
+
+            boolean slicedRight = false;
+            boolean slicedLeft = false;
+            int edgesSliced = 0;
+
+            if (bambooEdges[0].getIntersection(sliceLine) != null)
+            {
+                // Top edge sliced
+                edgesSliced++;
+            }
+            if (bambooEdges[1].getIntersection(sliceLine) != null)
+            {
+                // Right edge sliced
+                slicedRight = true;
+                edgesSliced++;
+            }
+            if (bambooEdges[2].getIntersection(sliceLine) != null)
+            {
+                // Bottom edge sliced
+                edgesSliced++;
+            }
+            if (bambooEdges[3].getIntersection(sliceLine) != null)
+            {
+                // Left edge sliced
+                slicedLeft = true;
+                edgesSliced++;
+            }
+
+            // Slicing only 1 edge (or less) will not split the bamboo
+            if (edgesSliced >= 2)
+            {
+                result = true;
+
+                Assets.playSound(Assets.bambooSliceSound);
+
+                if (slicedLeft && slicedRight)
+                {
+                    splitBambooHorizontally(bamboo);
+                }
+                else
+                {
+                    splitBambooVertically(bamboo);
+                }
+
+                // Swap the current bamboo, which we would like to remove, with the last one and remove the end
+                // of the list
+                int lastIndex = inAirBambooComponents.size() - 1;
+                inAirBambooComponents.set(bambooIndex , inAirBambooComponents.get(lastIndex));
+                inAirBambooComponents.remove(lastIndex);
+                bambooIndex--;
+
+                bambooComponents.push(bamboo);
+                bamboo.isEnabled = false;
+                bamboo.isVisible = false;
+
+                scoreComponent.score = scoreComponent.score + GameConfiguration.pointsPerBamboo;
+            }
+        }
+
+        return result;
+    }
+    
+    private void splitBambooVertically(LaunchedComponent bamboo)
+    {
+        // Find the position from which to launch each bamboo slice
+        Vector2 toLeftHalfCenter = new Vector2(-bamboo.getWidth() / 4f, 0);
+        toLeftHalfCenter =  toLeftHalfCenter.rotate(bamboo.rotation * Vector2.TO_DEGREES);
+        Vector2 toRightHalfCenter = new Vector2(-toLeftHalfCenter.x, -toLeftHalfCenter.y);
+
+        toLeftHalfCenter = toLeftHalfCenter.add(bamboo.position);
+        toRightHalfCenter = toRightHalfCenter.add(bamboo.position);
+
+        // Initialize the left slice component
+        LaunchedComponent leftSlice = bambooLeftSlices[bambooLeftSliceIndex++];
+
+        leftSlice.isVisible = true;
+        leftSlice.isEnabled = true;
+
+        leftSlice.Launch(toLeftHalfCenter, Vector2.add(bamboo.velocity, getSliceVelocityVariation()), bamboo.acceleration,
+            bamboo.rotation, bamboo.angularVelocity * 0.25f);
+
+        if (bambooLeftSliceIndex >= maxSwordSlashes)
+        {
+            bambooLeftSliceIndex = 0;
+        }
+
+        // Initialize the right slice component
+        LaunchedComponent rightSlice = bambooRightSlices[bambooRightSliceIndex++];
+
+        rightSlice.isVisible = true;
+        rightSlice.isEnabled = true;
+
+        rightSlice.Launch(toRightHalfCenter, Vector2.add(bamboo.velocity , getSliceVelocityVariation()), bamboo.acceleration,
+            bamboo.rotation, bamboo.angularVelocity * 0.25f);
+
+        if (bambooRightSliceIndex >= maxSwordSlashes)
+        {
+            bambooRightSliceIndex = 0;
+        }
+    }
+    
+    private void splitBambooHorizontally(LaunchedComponent bamboo)
+    {
+        // Find the position from which to launch each bamboo slice
+        Vector2 toTopHalfCenter = new Vector2(0, -bamboo.getHeight() / 4f);
+        toTopHalfCenter = toTopHalfCenter.rotate(bamboo.rotation * Vector2.TO_DEGREES);
+        Vector2 toBottomHalfCenter = new Vector2(-toTopHalfCenter.x, -toTopHalfCenter.y);
+
+        toTopHalfCenter = toTopHalfCenter.add(bamboo.position);
+        toBottomHalfCenter = toBottomHalfCenter.add(bamboo.position);
+
+        // Initialize the top slice component
+        LaunchedComponent topSlice = bambooTopSlices[bambooTopSliceIndex++];
+
+        topSlice.isVisible = true;
+        topSlice.isEnabled = true;
+
+        topSlice.Launch(toTopHalfCenter, Vector2.add(bamboo.velocity , getSliceVelocityVariation()), bamboo.acceleration,
+            bamboo.rotation, bamboo.angularVelocity * 0.25f);
+
+        if (bambooTopSliceIndex >= maxSwordSlashes)
+        {
+            bambooTopSliceIndex = 0;
+        }
+
+        // Initialize the bottom slice component
+        LaunchedComponent bottomSlice = bambooBottomSlices[bambooBottomSliceIndex++];
+
+        bottomSlice.isVisible = true;
+        bottomSlice.isEnabled = true;
+
+        bottomSlice.Launch(toBottomHalfCenter, Vector2.add(bamboo.velocity , getSliceVelocityVariation()), bamboo.acceleration,
+            bamboo.rotation, bamboo.angularVelocity * 0.25f);
+
+        if (bambooBottomSliceIndex >= maxSwordSlashes)
+        {
+            bambooBottomSliceIndex = 0;
+        }
+    }
+    
+    private Vector2 getSliceVelocityVariation()
+    {
+        return new Vector2(-30 + (float)random.nextDouble() * 60, -10 + (float)random.nextDouble() * 20);
     }
 }
