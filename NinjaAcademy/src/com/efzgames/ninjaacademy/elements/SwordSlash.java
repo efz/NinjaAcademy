@@ -32,7 +32,7 @@ public class SwordSlash extends TexturedDrawableGameComponent{
 	
 	private Vector2 scaleVector = new Vector2(1, 1);
 	
-	private Vector2 unitY = new Vector2(0,1);
+	private Vector2 unitY = new Vector2(0,-1);
 	
 	public float getStretch(){
 		return scaleVector.y;
@@ -83,11 +83,15 @@ public class SwordSlash extends TexturedDrawableGameComponent{
 
 	@Override
 	public void present(float deltaTime, SpriteBatcher batcher) {
-		// TODO Auto-generated method stub
+	    batcher.setAlpha(alpha);   
 		batcher.beginBatch(texture);
-		batcher.drawSprite(source.x +texture.width/2, source.y + texture.height/2, texture.width, texture.height,
-				rotation,textureRegion);
+//		batcher.drawSprite(source.x   , source.y , texture.width, texture.height,
+//				rotation* Vector2.TO_DEGREES,textureOrigin.x, textureOrigin.y ,scaleVector.x, scaleVector.y ,  textureRegion);
+		
+		batcher.drawSprite(source.x   , source.y , texture.width * scaleVector.x, texture.height * scaleVector.y,
+				rotation* Vector2.TO_DEGREES,  textureRegion);
 		batcher.endBatch();
+		batcher.setAlpha(1.0f);
 	}
 	
 	 public void fade(float fadeDuration)

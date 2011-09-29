@@ -11,9 +11,11 @@ public class SpriteBatcher {
     final float[] verticesBuffer;
     int bufferIndex;
     final Vertices vertices;
-    int numSprites;    
+    int numSprites;
+    GLGraphics glGraphics;    
     
-    public SpriteBatcher(GLGraphics glGraphics, int maxSprites) {                
+    public SpriteBatcher(GLGraphics glGraphics, int maxSprites) {  
+    	this.glGraphics = glGraphics;
         this.verticesBuffer = new float[maxSprites*4*4];        
         this.vertices = new Vertices(glGraphics, maxSprites*4, maxSprites*6, false, true);
         this.bufferIndex = 0;
@@ -32,6 +34,10 @@ public class SpriteBatcher {
         }
         vertices.setIndices(indices, 0, indices.length);                
     }       
+    
+    public void setAlpha(float alpha){
+    	glGraphics.getGL().glColor4f(1.0f, 1.0f, 1.0f, alpha);
+    }
     
     public void beginBatch(Texture texture) {
         texture.bind();
@@ -97,6 +103,57 @@ public class SpriteBatcher {
         float y3 = halfWidth * sin + halfHeight * cos;
         float x4 = -halfWidth * cos - halfHeight * sin;
         float y4 = -halfWidth * sin + halfHeight * cos;
+        
+        x1 += x;
+        y1 += y;
+        x2 += x;
+        y2 += y;
+        x3 += x;
+        y3 += y;
+        x4 += x;
+        y4 += y;
+        
+        verticesBuffer[bufferIndex++] = x1;
+        verticesBuffer[bufferIndex++] = y1;
+        verticesBuffer[bufferIndex++] = region.u1;
+        verticesBuffer[bufferIndex++] = region.v2;
+        
+        verticesBuffer[bufferIndex++] = x2;
+        verticesBuffer[bufferIndex++] = y2;
+        verticesBuffer[bufferIndex++] = region.u2;
+        verticesBuffer[bufferIndex++] = region.v2;
+        
+        verticesBuffer[bufferIndex++] = x3;
+        verticesBuffer[bufferIndex++] = y3;
+        verticesBuffer[bufferIndex++] = region.u2;
+        verticesBuffer[bufferIndex++] = region.v1;
+        
+        verticesBuffer[bufferIndex++] = x4;
+        verticesBuffer[bufferIndex++] = y4;
+        verticesBuffer[bufferIndex++] = region.u1;
+        verticesBuffer[bufferIndex++] = region.v1;
+        
+        numSprites++;
+    }
+    
+    public void drawSprite(float x, float y, float width, float height, float angle,
+    		float originX,float originY, float scaleX,float scaleY,TextureRegion region) {
+       
+    	x += originX*scaleX;
+    	y += originY*scaleY;
+        
+        float rad = angle * Vector2.TO_RADIANS;
+        float cos = FloatMath.cos(rad);
+        float sin = FloatMath.sin(rad);
+                
+        float x1 = -originX*scaleX * cos - (-originY*scaleY) * sin;
+        float y1 = -originX*scaleX * sin + (-originY*scaleY) * cos;
+        float x2 = (width - originX)* scaleX * cos - (-originY*scaleY) * sin;
+        float y2 = (width - originX)* scaleX * sin + (-originY*scaleY) * cos;
+        float x3 = (width - originX)* scaleX * cos - (height - originY)*scaleY * sin;
+        float y3 = (width - originX)* scaleX * sin + (height - originY)*scaleY * cos;
+        float x4 = -originX*scaleX * cos - (height - originY)*scaleY * sin;
+        float y4 = -originX*scaleX * sin + (height - originY)*scaleY * cos;
         
         x1 += x;
         y1 += y;
