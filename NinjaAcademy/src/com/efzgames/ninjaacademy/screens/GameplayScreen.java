@@ -27,6 +27,7 @@ import com.efzgames.ninjaacademy.elements.GameComponent;
 import com.efzgames.ninjaacademy.elements.HitPointsComponent;
 import com.efzgames.ninjaacademy.elements.LaunchedComponent;
 import com.efzgames.ninjaacademy.elements.ScoreComponent;
+import com.efzgames.ninjaacademy.elements.StaticTextureComponent;
 import com.efzgames.ninjaacademy.elements.SwordSlash;
 import com.efzgames.ninjaacademy.elements.Target;
 import com.efzgames.ninjaacademy.elements.StraightLineMovementComponent;
@@ -70,6 +71,7 @@ public class GameplayScreen  extends GameScreen {
     private Stack<LaunchedComponent> bambooComponents;
     private Stack<LaunchedComponent> dynamiteComponents;
 	
+    private StaticTextureComponent roomComponent;
 	private HitPointsComponent hitPointsComponent;
 	private ScoreComponent scoreComponent;
 	
@@ -126,11 +128,17 @@ public class GameplayScreen  extends GameScreen {
 		
 		gamePhasesPassed = -1;
         switchConfigurationPhase();      
+        
+        createTargetComponents();
+       
+        roomComponent = new StaticTextureComponent(glGame, this, Assets.room, Assets.roomRegion, new Vector2(0,0));
+        roomComponent.isEnabled = true;
+        roomComponent.isVisible = true;
+        ((NinjaAcademy)glGame).components.add(roomComponent);       
        
 		createHUDComponents();
-		createSwordSlashes();
+		createSwordSlashes();	
 		
-		createTargetComponents();
 		 
 		createLaunchedComponents();
 		createBambooSliceComponents();
@@ -398,13 +406,13 @@ public class GameplayScreen  extends GameScreen {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		
-		batcher.beginBatch(Assets.room);
-		batcher.drawSprite(400, 240, 800, 480,
-				Assets.roomRegion);
-		batcher.endBatch();
-		
-		hitPointsComponent.present(deltaTime, batcher);
-		scoreComponent.present(deltaTime, batcher);
+//		batcher.beginBatch(Assets.room);
+//		batcher.drawSprite(400, 240, 800, 480,
+//				Assets.roomRegion);
+//		batcher.endBatch();
+//		
+//		hitPointsComponent.present(deltaTime, batcher);
+//		scoreComponent.present(deltaTime, batcher);
 		
 		for(GameComponent comp: ((NinjaAcademy)game).components){
 			if(!comp.isVisible)
@@ -424,10 +432,16 @@ public class GameplayScreen  extends GameScreen {
     	// Create the component for displaying hit points
         hitPointsComponent = new HitPointsComponent(glGame);        
         hitPointsComponent.totalHitPoints = GameConfiguration.playerLives;
-        hitPointsComponent.currentHitPoints = GameConfiguration.playerLives;   
+        hitPointsComponent.currentHitPoints = GameConfiguration.playerLives; 
+        hitPointsComponent.isEnabled = true;
+        hitPointsComponent.isVisible = true;
+        ((NinjaAcademy)glGame).components.add(hitPointsComponent);
         
         scoreComponent = new ScoreComponent(glGame);
         scoreComponent.score =0;
+        scoreComponent.isEnabled = true;
+        scoreComponent.isVisible = true;
+        ((NinjaAcademy)glGame).components.add(scoreComponent);
     }
     
     /// <summary>
