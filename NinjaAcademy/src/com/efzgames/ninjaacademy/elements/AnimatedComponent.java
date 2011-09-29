@@ -61,7 +61,6 @@ public class AnimatedComponent extends TexturedDrawableGameComponent{
 
 	@Override
 	public void update(float deltaTime) {	
-		//if(animation != null)
 			animation.update(deltaTime);
 	}
 

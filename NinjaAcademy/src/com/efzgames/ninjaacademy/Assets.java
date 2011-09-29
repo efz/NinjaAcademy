@@ -52,6 +52,7 @@ public class Assets {
 	public static Sound fuseSound;
 	public static Sound swordSlashSound;
 	public static Sound bambooSliceSound;
+	public static Sound explosionSound;
 	public static Music ninjaAcademyMusic;
 	
 	public static Typeface moireFont;
@@ -76,6 +77,8 @@ public class Assets {
 	public static TextureRegion topSliceRegion;
 	public static TextureRegion leftSliceRegion;
 	public static TextureRegion rightSliceRegione;
+	public static Texture explosion;
+	public static TextureRegion explosionRegion;
 	
 	public static void load(GLGame game) {
 
@@ -111,6 +114,7 @@ public class Assets {
 		fuseSound = game.getAudio().newSound("audios/Fuse.ogg");
 		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
 		bambooSliceSound = game.getAudio().newSound("audios/Bamboo_Slice.ogg");
+		explosionSound = game.getAudio().newSound("audios/Explosion.ogg");
 		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
 		Assets.ninjaAcademyMusic.setLooping(true);
 		
@@ -133,6 +137,8 @@ public class Assets {
 		topSliceRegion = new TextureRegion(slice,0,0,41,92);
 		leftSliceRegion = new TextureRegion(slice,0,0,20,184);
 		rightSliceRegione = new TextureRegion(slice,0,0,20,184);
+		explosion = new Texture(game, "textures/elements/Explosion.png", false);
+		explosionRegion = new TextureRegion(slice,0,0,240,40);
 	}
 	
 	public static void reload() {
@@ -159,6 +165,7 @@ public class Assets {
 		topSlice.reload();
 		leftSlice.reload();
 		rightSlice.reload();
+		explosion.reload();
 	}
 	
 	public static void playSound(Sound sound) {		

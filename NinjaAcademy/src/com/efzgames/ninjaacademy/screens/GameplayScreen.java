@@ -21,6 +21,7 @@ import com.efzgames.ninjaacademy.Assets;
 import com.efzgames.ninjaacademy.GameConstants;
 import com.efzgames.ninjaacademy.GameConfiguration;
 import com.efzgames.ninjaacademy.GamePhase;
+import com.efzgames.ninjaacademy.elements.DisappearingAnimationComponent;
 import com.efzgames.ninjaacademy.elements.EventHandler;
 import com.efzgames.ninjaacademy.elements.GameComponent;
 import com.efzgames.ninjaacademy.elements.HitPointsComponent;
@@ -99,6 +100,9 @@ public class GameplayScreen  extends GameScreen {
     Random random;
     
     public int gamePhasesPassed;
+    
+    private int explosionIndex = 0;
+    private DisappearingAnimationComponent[] explosionComponents;
 	
 	public GameplayScreen(Game game) {
 		super(game);
@@ -112,6 +116,7 @@ public class GameplayScreen  extends GameScreen {
 		createSwordSlashes();
 		createLaunchedComponents();
 		createBambooSliceComponents();
+		createExplosionComponents();
 	}
 	
 	private void handleDrag(TouchEvent gesture)
@@ -154,9 +159,9 @@ public class GameplayScreen  extends GameScreen {
      {
 		 Line sliceLine = new Line(origin, destination);
 
-         return sliceBamboo(sliceLine);// || sliceDynamite(sliceLine);           
+         return sliceBamboo(sliceLine) || sliceDynamite(sliceLine);           
      }
-	
+	 
 	 private SwordSlash getSwordSlash()
      {
          SwordSlash result = swordSlashComponents[swordSlashIndex++];
@@ -333,6 +338,26 @@ public class GameplayScreen  extends GameScreen {
 
         dynamiteComponents.push(dynamite);
         inAirDynamiteComponents.remove(dynamite);
+    }
+    
+    private void createExplosionComponents()
+    {
+        explosionComponents = new DisappearingAnimationComponent[ maxDynamites];
+
+        for (int i = 0; i < maxDynamites; i++)
+        {
+            DisappearingAnimationComponent explosion = new DisappearingAnimationComponent(glGame,
+                this, new Animation(Assets.explosion, new Point(40,40), 6
+            		, new Vector2(20, 21), true, 0.400f));
+            
+            explosion.isVisible = false;
+            explosion.isEnabled = false;
+           
+
+            explosionComponents[i] = explosion;
+
+            ((NinjaAcademy)game).components.add(explosion);
+        }
     }
     
     private void createBambooSliceComponents()
@@ -519,6 +544,61 @@ public class GameplayScreen  extends GameScreen {
             swordSlashComponents[i] = swordSlash;
 
             ((NinjaAcademy)game).components.add(swordSlash);
+        }
+    }
+    
+    private boolean sliceDynamite(Line sliceLine)
+    {
+        boolean result = false;
+
+        for (int dynamiteIndex = 0; dynamiteIndex < inAirDynamiteComponents.size(); dynamiteIndex++)
+        {
+            LaunchedComponent dynamite = inAirDynamiteComponents.get(dynamiteIndex);
+
+            Line[] dynamiteEdges = dynamite.getEdges();
+
+            for (int edgeIndex = 0; edgeIndex < dynamiteEdges.length; edgeIndex++)
+            {
+                // See if there is intersection with any of the edges
+                if (dynamiteEdges[edgeIndex].getIntersection(sliceLine)  != null)
+                {
+                    result = true;
+
+                    Assets.playSound(Assets.explosionSound);
+
+                    // Swap the current dynamite, which we would like to remove, with the last one and remove the 
+                    // end of the list
+                    int lastIndex = inAirDynamiteComponents.size() - 1;
+                    inAirDynamiteComponents.set(dynamiteIndex , inAirDynamiteComponents.get(lastIndex));
+                    inAirDynamiteComponents.remove(lastIndex);
+                    dynamiteIndex--;
+
+                    dynamiteComponents.push(dynamite);
+                    dynamite.isEnabled = false;
+                    dynamite.isVisible = false;
+
+                    showExplosion(dynamite.position);
+
+                    setHitPoints( 0);
+                    
+                    //MarkGameOver();                        
+
+                    // We don't need to check the rest of the edges
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+    
+    private void showExplosion(Vector2 position)
+    {
+        explosionComponents[explosionIndex++].show(position);
+
+        if (explosionIndex >= maxDynamites)
+        {
+            explosionIndex = 0;
         }
     }
     
