@@ -11,7 +11,7 @@ public class GameConstants {
 
 	public static final float swordSlashFadeDuration = 0.150f;
 
-	public static final float targetRadius = 28;
+	public static final float targetRadius = 100;
 	public static final float targetSpeed = 75;
 
 	public static final Vector2 upperTargetAreaTopLeft = new Vector2(208, 480- 169);

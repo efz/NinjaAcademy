@@ -10,6 +10,6 @@ public class Rectangle2 {
     }
     
     public boolean contains(Vector2 point){    	
-    	return point.x <= topLeft.x && point.x >= bottomRight.x && point.y >= topLeft.y && point.y <= bottomRight.y;
+    	return point.x >= topLeft.x && point.x <= bottomRight.x && point.y <= topLeft.y && point.y >= bottomRight.y;
     }
 }

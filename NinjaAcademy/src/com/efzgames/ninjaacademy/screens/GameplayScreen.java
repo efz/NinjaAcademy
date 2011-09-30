@@ -436,13 +436,6 @@ public class GameplayScreen  extends GameScreen {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		
-//		batcher.beginBatch(Assets.room);
-//		batcher.drawSprite(400, 240, 800, 480,
-//				Assets.roomRegion);
-//		batcher.endBatch();
-//		
-//		hitPointsComponent.present(deltaTime, batcher);
-//		scoreComponent.present(deltaTime, batcher);
 		
 		for(GameComponent comp: ((NinjaAcademy)game).components){
 			if(!comp.isVisible)
