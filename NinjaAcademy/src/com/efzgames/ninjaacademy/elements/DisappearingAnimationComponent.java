@@ -14,7 +14,7 @@ public class DisappearingAnimationComponent extends AnimatedComponent {
 	}
 
 	@Override
-	public void update(float deltaTime) {		
+	public synchronized void update(float deltaTime) {		
 		super.update(deltaTime);
 		 if (!animation.isActive)
          {
@@ -24,15 +24,15 @@ public class DisappearingAnimationComponent extends AnimatedComponent {
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 		batcher.beginBatch(texture);
 		animation.present(deltaTime, batcher, position, 1 , visualCenter);	
 		batcher.endBatch();
 	}
 	
-	public void show(Vector2 position)
+	public synchronized void show(Vector2 position)
     {
-        this.position = position;
+        this.position = new Vector2(position);
         animation.playFromFrameIndex(0);
         isEnabled = true;
         isVisible = true;

@@ -37,16 +37,16 @@ public class Assets {
 	public static final int exitTextWidth = 100;
 	public static final int menuTextHeight = 60;
 	
-	public static Sound menuSelectionSound;
-	public static Sound fuseSound;
-	public static Sound swordSlashSound;
-	public static Sound bambooSliceSound;
-	public static Sound explosionSound;
-	public static Sound shurikenHitGoldSound;
-	public static Sound shurikenHitSound;
-	public static Sound shurikenSound;
-	public static Sound gameOverSound;
-	public static Sound highScoreSound;
+	public static Music menuSelectionSound;
+	public static Music fuseSound;
+	public static Music swordSlashSound;
+	public static Music bambooSliceSound;
+	public static Music explosionSound;
+	public static Music shurikenHitGoldSound;
+	public static Music shurikenHitSound;
+	public static Music shurikenSound;
+	public static Music gameOverSound;
+	public static Music highScoreSound;
 	public static Music ninjaAcademyMusic;
 	
 	public static Typeface moireFont;
@@ -109,16 +109,16 @@ public class Assets {
 		exitText = new SpriteText(game, "Exit", moireFont, 48, Color.WHITE, Color.BLACK,  exitTextWidth, 
 				menuTextHeight);
 		
-		swordSlashSound = game.getAudio().newSound("audios/Sword_Slash.ogg");
-		fuseSound = game.getAudio().newSound("audios/Fuse.ogg");
-		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
-		bambooSliceSound = game.getAudio().newSound("audios/Bamboo_Slice.ogg");
-		explosionSound = game.getAudio().newSound("audios/Explosion.ogg");
-		shurikenHitGoldSound = game.getAudio().newSound("audios/Shuriken_Metal_Hit.ogg");
-		shurikenHitSound = game.getAudio().newSound("audios/Shuriken_Wood_Hit.ogg");
-		shurikenSound = game.getAudio().newSound("audios/Shuriken_Throw.ogg");
-		gameOverSound = game.getAudio().newSound("audios/Game_Over.ogg");
-		highScoreSound = game.getAudio().newSound("audios/NewHighScore.ogg");
+		swordSlashSound = game.getAudio().newMusic("audios/Sword_Slash.ogg");
+		fuseSound = game.getAudio().newMusic("audios/Fuse.ogg");
+		menuSelectionSound = game.getAudio().newMusic("audios/Menu_Selection.ogg");
+		bambooSliceSound = game.getAudio().newMusic("audios/Bamboo_Slice.ogg");
+		explosionSound = game.getAudio().newMusic("audios/Explosion.ogg");
+		shurikenHitGoldSound = game.getAudio().newMusic("audios/Shuriken_Metal_Hit.ogg");
+		shurikenHitSound = game.getAudio().newMusic("audios/Shuriken_Wood_Hit.ogg");
+		shurikenSound = game.getAudio().newMusic("audios/Shuriken_Throw.ogg");
+		gameOverSound = game.getAudio().newMusic("audios/Game_Over.ogg");
+		highScoreSound = game.getAudio().newMusic("audios/NewHighScore.ogg");
 		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
 		Assets.ninjaAcademyMusic.setLooping(true);
 		
@@ -183,8 +183,10 @@ public class Assets {
 		target.reload();
 	}
 	
-	public static void playSound(Sound sound) {		
-			sound.play(1);
+	public static void playSound(Music music) {		
+		music.setLooping(false);
+		music.stop();
+		music.play();
 	}
 	
 }

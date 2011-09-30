@@ -21,11 +21,18 @@ public class LaunchedComponent extends AnimatedComponent {
 	// // The component's rotation in radians.
 	public float rotation;
 
-	boolean isEventFired = false;
+	private boolean isEventFired = false;
 
 	public float notifyHeight;
 
 	public EventHandler droppedPastHeight;
+	
+	private float boundingBoxInflation =0;
+	
+	public synchronized void setBoundingBoxInflation(float value){
+		this.boundingBoxInflation = value;
+	}
+	
 
 	public LaunchedComponent(GLGame glGame, GameScreen gameScreen,
 			Texture texture, TextureRegion textureRegion) {
@@ -40,7 +47,7 @@ public class LaunchedComponent extends AnimatedComponent {
 	}
 	
 	@Override
-    public Vector2 getBoundingBoxMin(){
+    public synchronized Vector2 getBoundingBoxMin(){
 		Vector2[] points = getCurrentBoundCornerPositions();
 		float minX= Float.MAX_VALUE, minY = Float.MAX_VALUE;
 		for(int i=0; i<4; i++){
@@ -53,7 +60,7 @@ public class LaunchedComponent extends AnimatedComponent {
     }
     
     @Override
-    public Vector2 getBoundingBoxMax(){
+    public synchronized Vector2 getBoundingBoxMax(){
     	Vector2[] points = getCurrentBoundCornerPositions();
 		float minX= Float.MIN_VALUE, minY = Float.MIN_VALUE;
 		for(int i=0; i<4; i++){
@@ -66,17 +73,17 @@ public class LaunchedComponent extends AnimatedComponent {
     }
     
     @Override
-    public float getBoundingHeight(){
+    public synchronized float getBoundingHeight(){
    	 return getBoundingBoxMax().y - getBoundingBoxMin().y;
     }
     
     @Override
-    public float getBoundingWidth(){
+    public synchronized float getBoundingWidth(){
     	return getBoundingBoxMax().x - getBoundingBoxMin().x;
     }
 
 	@Override
-	public void update(float deltaTime) {
+	public synchronized void update(float deltaTime) {
 		
 		super.update(deltaTime);
 		
@@ -98,30 +105,30 @@ public class LaunchedComponent extends AnimatedComponent {
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 		
 		batcher.beginBatch(texture);
 		animation.present(deltaTime, batcher, position, rotation, visualCenter);
 		batcher.endBatch();
 	}
 	
-	public void Launch(Vector2 initialPosition, Vector2 initialVelocity, Vector2 acceleration, 
+	public synchronized void Launch(Vector2 initialPosition, Vector2 initialVelocity, Vector2 acceleration, 
             float angularVelocity)
     {
             Launch(initialPosition, initialVelocity, acceleration, 0, angularVelocity);
     }
 
-	public void Launch(Vector2 initialPosition, Vector2 initialVelocity,
+	public synchronized void Launch(Vector2 initialPosition, Vector2 initialVelocity,
 			Vector2 acceleration, float initialRotation, float angularVelocity) {
-		position = initialPosition;
-		velocity = initialVelocity;
-		rotation = initialRotation;
-		this.acceleration = acceleration;
+		position = new Vector2(initialPosition);
+		velocity = new Vector2(initialVelocity);
+		rotation =initialRotation;
+		this.acceleration = new Vector2(acceleration);
 		this.angularVelocity = angularVelocity;
 		isEventFired = false;
 	}
 	
-	  public Line[] getEdges()
+	  public synchronized Line[] getEdges()
       {
           Vector2[] corners = getCurrentBoundCornerPositions();
 
@@ -134,15 +141,15 @@ public class LaunchedComponent extends AnimatedComponent {
           return result;
       }
 	  
-	  protected Vector2[] getCurrentBoundCornerPositions()
+	  protected synchronized Vector2[] getCurrentBoundCornerPositions()
       { 
        
           Vector2[] unrotatedCornersAroundCenter = new Vector2[]
           {
-              new Vector2(-(super.getBoundingWidth() + GameConstants.boundingBoxInflation )/ 2, (super.getBoundingHeight()+ GameConstants.boundingBoxInflation )/ 2),
-              new Vector2((super.getBoundingWidth() + GameConstants.boundingBoxInflation) / 2, (super.getBoundingHeight() + GameConstants.boundingBoxInflation) / 2),
-              new Vector2((super.getBoundingWidth() + GameConstants.boundingBoxInflation) / 2, -(super.getBoundingHeight() + GameConstants.boundingBoxInflation) / 2),
-              new Vector2(-(super.getBoundingWidth() + + GameConstants.boundingBoxInflation) / 2, -(super.getBoundingHeight() +  GameConstants.boundingBoxInflation) / 2)
+              new Vector2(-(super.getBoundingWidth() + boundingBoxInflation )/ 2, (super.getBoundingHeight()+ boundingBoxInflation )/ 2),
+              new Vector2((super.getBoundingWidth() + boundingBoxInflation) / 2, (super.getBoundingHeight() + boundingBoxInflation) / 2),
+              new Vector2((super.getBoundingWidth() + boundingBoxInflation) / 2, -(super.getBoundingHeight() + boundingBoxInflation) / 2),
+              new Vector2(-(super.getBoundingWidth() + + boundingBoxInflation) / 2, -(super.getBoundingHeight() +  boundingBoxInflation) / 2)
           };
 
           // Rotate the corners around (0, 0)

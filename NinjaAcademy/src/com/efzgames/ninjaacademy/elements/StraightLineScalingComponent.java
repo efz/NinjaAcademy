@@ -13,7 +13,7 @@ public class StraightLineScalingComponent extends StraightLineMovementComponent 
 	private float remainingScaleAmount;
 	private float scaleVelocity;
 
-	public float scale;
+	private float scale;
 
 	public StraightLineScalingComponent(GLGame glGame, GameScreen gameScreen,
 			Animation animation) {
@@ -26,7 +26,7 @@ public class StraightLineScalingComponent extends StraightLineMovementComponent 
 	}
 	
 	@Override
-	public void update(float deltaTime) {		
+	public synchronized void update(float deltaTime) {		
 		 super.update(deltaTime);
 		
 		  float elapsedSeconds = (float)deltaTime;
@@ -45,13 +45,13 @@ public class StraightLineScalingComponent extends StraightLineMovementComponent 
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 		batcher.beginBatch(texture);
 		animation.present(deltaTime, batcher, position, 0 , visualCenter, scale);	
 		batcher.endBatch();
 	}
 
-	public void moveAndScale(float time, Vector2 initialPosition,
+	public synchronized void moveAndScale(float time, Vector2 initialPosition,
 			Vector2 destinationPosition, float initialScale,
 			float destinationScale) {
 	

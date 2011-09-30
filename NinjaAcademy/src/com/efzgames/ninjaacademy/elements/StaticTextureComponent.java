@@ -16,12 +16,12 @@ public class StaticTextureComponent extends TexturedDrawableGameComponent {
 	}
 
 	@Override
-	public void update(float deltaTime) {		
+	public synchronized void update(float deltaTime) {		
 		
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 		batcher.beginBatch(texture);
 		batcher.drawSprite(position.x +texture.width/2   , position.y + texture.height/2 , texture.width , texture.height , textureRegion);
 		batcher.endBatch();

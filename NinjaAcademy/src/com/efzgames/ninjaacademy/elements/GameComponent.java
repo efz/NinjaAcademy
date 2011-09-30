@@ -11,7 +11,11 @@ public abstract class GameComponent {
 	public boolean isEnabled = false;
 	public boolean isVisible = false;
 	
-	public Vector2 position;
+	public synchronized Vector2 getPosition(){
+		return position;
+	}
+	
+	protected Vector2 position;
 	
 	protected GLGame glGame;
 	

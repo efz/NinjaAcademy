@@ -28,7 +28,7 @@ public class StraightLineMovementComponent extends AnimatedComponent {
 	}
 	
 	@Override
-	public void update(float deltaTime) {		
+	public synchronized void update(float deltaTime) {		
 		 super.update(deltaTime);
 		
          float elapsedSeconds = (float)deltaTime;
@@ -56,14 +56,14 @@ public class StraightLineMovementComponent extends AnimatedComponent {
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 		batcher.beginBatch(texture);
 		animation.present(deltaTime, batcher, position, 0 , visualCenter);	
 		batcher.endBatch();
 	}
 	
 	
-	public void moveWithVelocity(float velocity, Vector2 initialPosition, Vector2 destination)
+	public synchronized void moveWithVelocity(float velocity, Vector2 initialPosition, Vector2 destination)
     {
         if (velocity <= 0)
         {
@@ -81,7 +81,7 @@ public class StraightLineMovementComponent extends AnimatedComponent {
     }
 	
 	
-	public void moveWithTime(float time, Vector2 initialPosition, Vector2 destination)
+	public synchronized  void moveWithTime(float time, Vector2 initialPosition, Vector2 destination)
     {
         if (time <= 0)
         {

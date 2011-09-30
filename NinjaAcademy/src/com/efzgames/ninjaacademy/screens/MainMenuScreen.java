@@ -64,7 +64,7 @@ public class MainMenuScreen extends GLScreen {
 
 		float PositionY = 200.0f;
 		float PositionX = 520;
-		int menuEntryPadding = 5;
+		int menuEntryPadding = 15;
 
 		startBounds = new Rectangle(PositionX - Assets.startTextWidth / 2,
 				PositionY - Assets.menuTextHeight / 2, Assets.startTextWidth,

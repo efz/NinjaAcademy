@@ -43,5 +43,6 @@ public class GameConstants {
 	public static final float throwingStarFlightDuration = 0.250f;
 	public static float throwingStarEndScale = 0.25f;
 	
-	public static float boundingBoxInflation = 100;
+	public static float boundingBoxInflationDynamite = 100;
+	public static float boundingBoxInflationbamboo = 200;
 }

@@ -59,10 +59,12 @@ public class AndroidMusic implements Music, OnCompletionListener {
         if (mediaPlayer.isPlaying())
             return;
 
+       
         try {
             synchronized (this) {
                 if (!isPrepared)
                     mediaPlayer.prepare();
+                mediaPlayer.seekTo(0);
                 mediaPlayer.start();
             }
         } catch (IllegalStateException e) {

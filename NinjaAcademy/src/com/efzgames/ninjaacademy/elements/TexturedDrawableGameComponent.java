@@ -14,25 +14,23 @@ public abstract class TexturedDrawableGameComponent extends GameComponent {
      protected SpriteBatcher spriteBatch;
      protected Texture texture;  
      protected TextureRegion textureRegion; 
-     protected GameScreen gameScreen;
+     protected GameScreen gameScreen;    
+         
+     protected Vector2 visualCenter;
      
-     public Vector2 position;
-     
-     public Vector2 visualCenter;
-     
-     public Vector2 getBoundingBoxMin(){
+     public synchronized Vector2 getBoundingBoxMin(){
     	 return new Vector2( position.x , position.y);
      }
      
-     public Vector2 getBoundingBoxMax(){
+     public synchronized Vector2 getBoundingBoxMax(){
     	 return new Vector2( position.x +texture.width, position.y + texture.height);
      }
      
-     public float getBoundingHeight(){
+     public synchronized float getBoundingHeight(){
     	 return texture.height;
      }
      
-     public float getBoundingWidth(){
+     public synchronized float getBoundingWidth(){
     	 return texture.width;
      }
 	

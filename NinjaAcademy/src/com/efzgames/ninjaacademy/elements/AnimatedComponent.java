@@ -17,31 +17,31 @@ public class AnimatedComponent extends TexturedDrawableGameComponent{
 
     protected Animation animation;
     
-    public float getWidth(){
+    public synchronized float getWidth(){
     	return animation.getFrameWidth();
     }
     
-    public float getHeight(){
+    public synchronized float getHeight(){
     	return animation.getFrameHeight();
     }
     
     @Override
-    public Vector2 getBoundingBoxMin(){
+    public synchronized Vector2 getBoundingBoxMin(){
    	 return new Vector2( position.x , position.y);
     }
     
     @Override
-    public Vector2 getBoundingBoxMax(){
+    public synchronized Vector2 getBoundingBoxMax(){
    	 return new Vector2( position.x +animation.getFrameWidth(), position.y + animation.getFrameHeight());
     }
     
     @Override
-    public float getBoundingHeight(){
+    public synchronized float getBoundingHeight(){
    	 return animation.getFrameHeight();
     }
     
     @Override
-    public float getBoundingWidth(){
+    public synchronized float getBoundingWidth(){
    	 return animation.getFrameWidth();
     }
     
@@ -60,25 +60,25 @@ public class AnimatedComponent extends TexturedDrawableGameComponent{
 	}
 
 	@Override
-	public void update(float deltaTime) {	
+	public synchronized void update(float deltaTime) {	
 			animation.update(deltaTime);
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 	
 		
 	}
 	
-	public void resetAnimation(){
+	public synchronized void resetAnimation(){
         animation.playFromFrameIndex(0);
     }
 	
-	 public void pause(){
+	 public synchronized void pause(){
          animation.isActive = false;
      }
 	 
-	 public void resume(){
+	 public synchronized void resume(){
          animation.isActive = true;
      }
 

@@ -28,17 +28,17 @@ public class SwordSlash extends TexturedDrawableGameComponent{
 	private float desiredScale;
 	private float alpha = 1;
 	
-	public float rotation;
+	private float rotation;
 	
 	private Vector2 scaleVector = new Vector2(1, 1);
 	
 	private Vector2 unitY = new Vector2(0,-1);
 	
-	public float getStretch(){
+	public synchronized float getStretch(){
 		return scaleVector.y;
 	}
 	
-	public void setStretch(float value){
+	public synchronized void setStretch(float value){
 		scaleVector.y = value;
 	}
 	
@@ -48,7 +48,7 @@ public class SwordSlash extends TexturedDrawableGameComponent{
 	}
 
 	@Override
-	public void update(float deltaTime) {
+	public synchronized void update(float deltaTime) {
 		  timer += deltaTime;
 
           switch (state)
@@ -82,7 +82,7 @@ public class SwordSlash extends TexturedDrawableGameComponent{
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 	    batcher.setAlpha(alpha);   
 		batcher.beginBatch(texture);
 //		batcher.drawSprite(source.x   , source.y , texture.width, texture.height,
@@ -94,7 +94,7 @@ public class SwordSlash extends TexturedDrawableGameComponent{
 		batcher.setAlpha(1.0f);
 	}
 	
-	 public void fade(float fadeDuration)
+	 public synchronized void fade(float fadeDuration)
      {
          timer = 0;
 
@@ -103,7 +103,7 @@ public class SwordSlash extends TexturedDrawableGameComponent{
          state = State.Fading;
      }
 	
-	 public void reset()
+	 public synchronized void reset()
      {
          // Make the slash active and visible
          alpha = 1;
@@ -111,7 +111,7 @@ public class SwordSlash extends TexturedDrawableGameComponent{
          isVisible = true;
      }
 	 
-	 public void positionSlash(Vector2 source, Vector2 destination)
+	 public synchronized void positionSlash(Vector2 source, Vector2 destination)
      {
          state = State.Static;
          this.source = source;
@@ -121,7 +121,7 @@ public class SwordSlash extends TexturedDrawableGameComponent{
          setStretch( desiredScale);
      }
 	 
-	 public void initializeSlashForCoordinates(Vector2 source, Vector2 destination)
+	 public synchronized void initializeSlashForCoordinates(Vector2 source, Vector2 destination)
      {            
          // Find the scale required to properly display the slash
          desiredScale = Vector2.sub(source , destination).len() / getBoundingHeight();

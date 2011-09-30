@@ -29,7 +29,7 @@ public class Target extends StraightLineMovementComponent{
 		super(glGame, gameScreen, texture, textureRegion);
 	}
 	
-    public boolean checkHit(Vector2 hitLocation)
+    public synchronized boolean checkHit(Vector2 hitLocation)
     {
         Sphere exactBounds = new Sphere(new Vector3(position.x, position.y, 0), GameConstants.targetRadius);
 

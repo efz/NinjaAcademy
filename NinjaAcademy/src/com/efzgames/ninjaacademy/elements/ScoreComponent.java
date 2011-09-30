@@ -15,18 +15,30 @@ public class ScoreComponent extends GameComponent{
 		super(glGame);
 	}
 	
-	public int score;
-	public int highscore;
+	private int score;
+	private int highscore;
 	
-	public static final Vector2 ScorePosition = new Vector2(10, 480-15); 
+	public synchronized int getScore(){
+		return score;
+	}
+	
+	public synchronized void setScore(int value){
+		score = value;
+	}
+	
+	public synchronized void setHighscore(int value){
+		score = value;
+	}
+	
+	private static final Vector2 ScorePosition = new Vector2(10, 480-15); 
 	
 	@Override
-	public void update(float deltaTime){
+	public synchronized void update(float deltaTime){
 		
 	}
 
 	@Override
-	public void present(float deltaTime, SpriteBatcher batcher) {
+	public synchronized void present(float deltaTime, SpriteBatcher batcher) {
 		String scoreText = "Score: "+ score +"/"+highscore;
 		
 		SpriteText scoreSprite = new SpriteText(glGame, scoreText,

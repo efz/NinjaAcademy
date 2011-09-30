@@ -10,7 +10,7 @@ import com.efzgames.ninjaacademy.screens.GameScreen;
 
 public class ThrowingStar extends StraightLineScalingComponent {
 
-	 Random random;
+	private Random random;
 	
 	public ThrowingStar(GLGame glGame, GameScreen gameScreen,
 			Animation animation) {
@@ -20,16 +20,16 @@ public class ThrowingStar extends StraightLineScalingComponent {
 		
 	}
 	
-	public void throwStar(Vector2 destination)
+	public synchronized void throwStar(Vector2 destination)
     {
-        isEnabled = true;
-        isVisible = true;
-
         // cause each star thrown to spin differently            
         animation.frameIndex = random.nextInt(animation.frameCount);
 
         moveAndScale(GameConstants.throwingStarFlightDuration, GameConstants.throwingStarOrigin,
             destination, 1, GameConstants.throwingStarEndScale);
+        
+        isEnabled = true;
+        isVisible = true;
     }
 
 }
