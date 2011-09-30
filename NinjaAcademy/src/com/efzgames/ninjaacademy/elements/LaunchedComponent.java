@@ -7,6 +7,7 @@ import com.efzgames.framework.gl.TextureRegion;
 import com.efzgames.framework.impl.GLGame;
 import com.efzgames.framework.math.Line;
 import com.efzgames.framework.math.Vector2;
+import com.efzgames.ninjaacademy.GameConstants;
 import com.efzgames.ninjaacademy.screens.GameScreen;
 
 public class LaunchedComponent extends AnimatedComponent {
@@ -140,10 +141,10 @@ public class LaunchedComponent extends AnimatedComponent {
           
           Vector2[] unrotatedCornersAroundCenter = new Vector2[]
           {
-              new Vector2(-super.getBoundingWidth() / 2, super.getBoundingHeight() / 2),
-              new Vector2(super.getBoundingWidth() / 2, super.getBoundingHeight() / 2),
-              new Vector2(super.getBoundingWidth() / 2, -super.getBoundingHeight() / 2),
-              new Vector2(-super.getBoundingWidth() / 2, -super.getBoundingHeight() / 2)
+              new Vector2(-(super.getBoundingWidth() + GameConstants.boundingBoxInflation )/ 2, (super.getBoundingHeight()+ GameConstants.boundingBoxInflation )/ 2),
+              new Vector2((super.getBoundingWidth() + GameConstants.boundingBoxInflation) / 2, (super.getBoundingHeight() + GameConstants.boundingBoxInflation) / 2),
+              new Vector2((super.getBoundingWidth() + GameConstants.boundingBoxInflation) / 2, -(super.getBoundingHeight() + GameConstants.boundingBoxInflation) / 2),
+              new Vector2(-(super.getBoundingWidth() + + GameConstants.boundingBoxInflation) / 2, -(super.getBoundingHeight() +  GameConstants.boundingBoxInflation) / 2)
           };
 
           // Rotate the corners around (0, 0)
