@@ -135,10 +135,8 @@ public class LaunchedComponent extends AnimatedComponent {
       }
 	  
 	  protected Vector2[] getCurrentBoundCornerPositions()
-      {
-		 
-          Vector2[] result = new Vector2[4];                 
-          
+      { 
+       
           Vector2[] unrotatedCornersAroundCenter = new Vector2[]
           {
               new Vector2(-(super.getBoundingWidth() + GameConstants.boundingBoxInflation )/ 2, (super.getBoundingHeight()+ GameConstants.boundingBoxInflation )/ 2),
@@ -153,16 +151,14 @@ public class LaunchedComponent extends AnimatedComponent {
           unrotatedCornersAroundCenter[2] = unrotatedCornersAroundCenter[2].rotate(rotation * Vector2.TO_DEGREES);
           unrotatedCornersAroundCenter[3] = unrotatedCornersAroundCenter[3].rotate(rotation * Vector2.TO_DEGREES);
                 
-          result[0] = new Vector2(unrotatedCornersAroundCenter[0].x + position.x, 
-        		  unrotatedCornersAroundCenter[0].y + position.y);
-          result[1] = new Vector2(unrotatedCornersAroundCenter[1].x + position.x, 
-        		  unrotatedCornersAroundCenter[1].y + position.y);
-          result[2] = new Vector2(unrotatedCornersAroundCenter[2].x + position.x, 
-        		  unrotatedCornersAroundCenter[2].y + position.y);
-          result[3] = new Vector2(unrotatedCornersAroundCenter[3].x + position.x, 
-        		  unrotatedCornersAroundCenter[3].y + position.y);          
 
-          return result;
+          unrotatedCornersAroundCenter[0] = unrotatedCornersAroundCenter[0].add(position);
+          unrotatedCornersAroundCenter[1] = unrotatedCornersAroundCenter[1].add(position);
+          unrotatedCornersAroundCenter[2] = unrotatedCornersAroundCenter[2].add(position);
+          unrotatedCornersAroundCenter[3] = unrotatedCornersAroundCenter[3].add(position);
+          
+
+          return unrotatedCornersAroundCenter;
       }
 	
 }

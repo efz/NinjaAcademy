@@ -4,7 +4,7 @@ import com.efzgames.framework.math.Vector2;
 
 public class GameConstants {
 	
-	public static final float maxGameTime = 30;
+	public static final float maxGameTime = 150;
 	
 	public static final int viewPortWidth = 800;
 	public static final int viewPortHeight = 480;
@@ -43,5 +43,5 @@ public class GameConstants {
 	public static final float throwingStarFlightDuration = 0.250f;
 	public static float throwingStarEndScale = 0.25f;
 	
-	public static float boundingBoxInflation = 50;
+	public static float boundingBoxInflation = 100;
 }

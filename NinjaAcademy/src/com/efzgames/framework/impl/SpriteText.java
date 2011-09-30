@@ -20,6 +20,7 @@ public class SpriteText {
 	private int textHeight;
 	private Texture texture;
 	private TextureRegion textureRegion;
+	private Bitmap bitmap;
 	
 	public int getWidth(){
 		return width;
@@ -68,7 +69,7 @@ public class SpriteText {
 
 		
 		// Create an empty, mutable bitmap
-		Bitmap bitmap = Bitmap.createBitmap(width, height,
+		bitmap = Bitmap.createBitmap(width, height,
 				Bitmap.Config.ARGB_4444);
 		// get a canvas to paint over the bitmap
 		Canvas canvas = new Canvas(bitmap);
@@ -89,5 +90,11 @@ public class SpriteText {
 		batcher.beginBatch(texture);
 		batcher.drawSprite(x, y, width, height, textureRegion);
 		batcher.endBatch();
+	}
+	
+	public void dispose() {
+		texture.dispose();
+		bitmap.recycle();
+		
 	}
 }

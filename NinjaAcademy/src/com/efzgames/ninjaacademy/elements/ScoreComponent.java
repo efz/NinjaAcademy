@@ -34,5 +34,6 @@ public class ScoreComponent extends GameComponent{
 				36,  Color.WHITE, 550, 60);				
 		scoreSprite.draw(batcher, ScorePosition.x + scoreSprite.getTextWidth()/2,
 				ScorePosition.y - scoreSprite.getTextHeight()/2);
+		scoreSprite.dispose();
 	}
 }

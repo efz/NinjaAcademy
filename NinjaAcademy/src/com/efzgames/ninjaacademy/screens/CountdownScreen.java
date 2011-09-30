@@ -65,6 +65,7 @@ public class CountdownScreen  extends GameScreen {
 				60,  Color.WHITE, Color.BLACK, 100, 100);				
 		countdownValueSprite.draw(batcher, 400 + countdownValueSprite.getTextWidth()/2,
 				240 - countdownValueSprite.getHeight()/2);
+		countdownValueSprite.dispose();
 	
 		gl.glDisable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_TEXTURE_2D);

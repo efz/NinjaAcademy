@@ -33,6 +33,7 @@ public class GameOverComponent extends GameComponent {
 				36,  Color.RED, 350, 60);				
 		gameoverSprite.draw(batcher, GameConstants.viewPortWidth/2,
 				GameConstants.viewPortHeight/2);
+		gameoverSprite.dispose();
 		
 		if(isHighScore){
 			SpriteText congratSprite = new SpriteText(glGame, "New High Score Record!",
@@ -40,12 +41,14 @@ public class GameOverComponent extends GameComponent {
 					36,  Color.WHITE, 400, 60);				
 			congratSprite.draw(batcher, GameConstants.viewPortWidth/2,
 					GameConstants.viewPortHeight/2  - 100);
+			congratSprite.dispose();
 			
 			SpriteText highScoreSprite = new SpriteText(glGame, String.valueOf(highScore),
 					Assets.moireBoldFont,
 					36,  Color.RED, 400, 60);				
 			highScoreSprite.draw(batcher, GameConstants.viewPortWidth/2,
 					GameConstants.viewPortHeight/2  - 200);
+			highScoreSprite.dispose();
 		}
 		
 	}
