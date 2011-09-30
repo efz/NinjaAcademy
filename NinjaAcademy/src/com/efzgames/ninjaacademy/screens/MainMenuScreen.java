@@ -45,7 +45,7 @@ public class MainMenuScreen extends GLScreen {
 	private Vector2 titleOffset;
 
 	private Rectangle startBounds;
-	private Rectangle highscoreBounds;
+	//private Rectangle highscoreBounds;
 	private Rectangle exitBounds;
 	private Vector2 touchPoint;
 
@@ -71,10 +71,10 @@ public class MainMenuScreen extends GLScreen {
 				Assets.menuTextHeight);
 		PositionY -= Assets.menuTextHeight + menuEntryPadding;
 
-		highscoreBounds = new Rectangle(PositionX - Assets.highscoreTextWidth
-				/ 2, PositionY - Assets.menuTextHeight / 2,
-				Assets.highscoreTextWidth, Assets.menuTextHeight);
-		PositionY -= Assets.menuTextHeight + menuEntryPadding;
+//		highscoreBounds = new Rectangle(PositionX - Assets.highscoreTextWidth
+//				/ 2, PositionY - Assets.menuTextHeight / 2,
+//				Assets.highscoreTextWidth, Assets.menuTextHeight);
+//		PositionY -= Assets.menuTextHeight + menuEntryPadding;
 
 		exitBounds = new Rectangle(PositionX - Assets.exitTextWidth / 2,
 				PositionY - Assets.menuTextHeight / 2, Assets.exitTextWidth,
@@ -107,11 +107,11 @@ public class MainMenuScreen extends GLScreen {
 				game.setScreen(new InstructionsScreen(game));
 				return;
 			}
-			if (OverlapTester.pointInRectangle(highscoreBounds, touchPoint)) {
-				Assets.playSound(Assets.menuSelectionSound);
-				game.setScreen(new HighScoreScreen(game));
-				return;
-			}
+//			if (OverlapTester.pointInRectangle(highscoreBounds, touchPoint)) {
+//				Assets.playSound(Assets.menuSelectionSound);
+//				game.setScreen(new HighScoreScreen(game));
+//				return;
+//			}
 			if (OverlapTester.pointInRectangle(exitBounds, touchPoint)) {
 				Assets.playSound(Assets.menuSelectionSound);
 				game.exit();
@@ -197,8 +197,8 @@ public class MainMenuScreen extends GLScreen {
 		Assets.startText.draw(batcher, startBounds.getCenterX(),
 				startBounds.getCenterY());
 
-		Assets.highscoreText.draw(batcher, highscoreBounds.getCenterX(),
-				highscoreBounds.getCenterY());
+//		Assets.highscoreText.draw(batcher, highscoreBounds.getCenterX(),
+//				highscoreBounds.getCenterY());
 
 		Assets.exitText.draw(batcher, exitBounds.getCenterX(),
 				exitBounds.getCenterY());

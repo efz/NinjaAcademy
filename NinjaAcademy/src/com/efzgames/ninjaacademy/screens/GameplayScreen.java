@@ -144,11 +144,10 @@ public class GameplayScreen  extends GameScreen {
         roomComponent = new StaticTextureComponent(glGame, this, Assets.room, Assets.roomRegion, new Vector2(0,0));
         roomComponent.isEnabled = true;
         roomComponent.isVisible = true;
-        ((NinjaAcademy)glGame).components.add(roomComponent);       
-       
-		createHUDComponents();
-		createSwordSlashes();	
-		
+        ((NinjaAcademy)glGame).components.add(roomComponent); 
+        
+        createThrowingStars();     
+						
 		 // Initialize the target areas
         upperTargetArea = new Rectangle2(GameConstants.upperTargetAreaTopLeft,
             GameConstants.upperTargetAreaBottomRight);
@@ -156,12 +155,15 @@ public class GameplayScreen  extends GameScreen {
             GameConstants.middleTargetAreaBottomRight);
         lowerTargetArea = new Rectangle2(GameConstants.lowerTargetAreaTopLeft,
             GameConstants.lowerTargetAreaBottomRight);
-		
-        createThrowingStars();
+		       
         
 		createLaunchedComponents();
 		createBambooSliceComponents();
 		createExplosionComponents();
+		
+		createSwordSlashes();	
+		
+		createHUDComponents();
 	}
 	
 	private void handleDrag(TouchEvent gesture)
@@ -234,44 +236,8 @@ public class GameplayScreen  extends GameScreen {
 
          fallingTargetComponents = new LaunchedComponent[ maxFallingTargets];
          fallingGoldTargetComponents = new LaunchedComponent[maxFallingGoldTargets];
-
-         // Create conveyer belt targets
-         for (int i = 0; i < maxConveyerTargets; i++)
-         {
-             upperTargetComponents.push(getNewConveyerTarget(TargetPosition.Upper));
-             middleTargetComponents.push(getNewConveyerTarget(TargetPosition.Middle));
-             lowerTargetComponents.push(getNewConveyerTarget(TargetPosition.Lower));
-
-             ((NinjaAcademy)game).components.add(upperTargetComponents.peek());
-             ((NinjaAcademy)game).components.add(middleTargetComponents.peek());
-             ((NinjaAcademy)game).components.add(lowerTargetComponents.peek());
-         }
-
-         // Create golden targets
-         for (int i = 0; i < maxGoldTargets; i++)
-         {
-             Target goldTarget = new Target(glGame, this, new Animation(Assets.goldtarget, new Point(57,58), 12
-             		, new Vector2(29, 29), true, 0.500f) );
-            
-             goldTarget.isVisible = false;
-             goldTarget.isEnabled = false;
-             goldTarget.isGolden = true;
-             goldTarget.designation = TargetPosition.Anywhere;
-     
-             goldTarget.finishedMoving = new EventHandler(){
-               	@Override
-               	public void onEvent(GameComponent source){
-               		targetFinishedMoving(source);
-               	}
-               };
-             
-
-             goldTargetComponents.push(goldTarget);
-
-             ((NinjaAcademy)game).components.add(goldTarget);
-         }
-
-         // Create falling targets
+         
+      // Create falling targets
          for (int i = 0; i < maxFallingTargets; i++)
          {
              LaunchedComponent fallingTarget = new LaunchedComponent(glGame,
@@ -317,6 +283,44 @@ public class GameplayScreen  extends GameScreen {
 
              ((NinjaAcademy)game).components.add(fallingGoldTarget);
          }
+
+         // Create conveyer belt targets
+         for (int i = 0; i < maxConveyerTargets; i++)
+         {
+             upperTargetComponents.push(getNewConveyerTarget(TargetPosition.Upper));
+             middleTargetComponents.push(getNewConveyerTarget(TargetPosition.Middle));
+             lowerTargetComponents.push(getNewConveyerTarget(TargetPosition.Lower));
+
+             ((NinjaAcademy)game).components.add(upperTargetComponents.peek());
+             ((NinjaAcademy)game).components.add(middleTargetComponents.peek());
+             ((NinjaAcademy)game).components.add(lowerTargetComponents.peek());
+         }
+
+         // Create golden targets
+         for (int i = 0; i < maxGoldTargets; i++)
+         {
+             Target goldTarget = new Target(glGame, this, new Animation(Assets.goldtarget, new Point(57,58), 12
+             		, new Vector2(29, 29), true, 0.500f) );
+            
+             goldTarget.isVisible = false;
+             goldTarget.isEnabled = false;
+             goldTarget.isGolden = true;
+             goldTarget.designation = TargetPosition.Anywhere;
+     
+             goldTarget.finishedMoving = new EventHandler(){
+               	@Override
+               	public void onEvent(GameComponent source){
+               		targetFinishedMoving(source);
+               	}
+               };
+             
+
+             goldTargetComponents.push(goldTarget);
+
+             ((NinjaAcademy)game).components.add(goldTarget);
+         }
+
+         
      }
 	 
 	  private Target getNewConveyerTarget(TargetPosition targetPosition)
@@ -1157,7 +1161,7 @@ public class GameplayScreen  extends GameScreen {
             LaunchedComponent fallingTarget = fallingTargetComponents[fallingTargetIndex++];
 
             fallingTarget.resetAnimation();
-            fallingTarget.Launch(initialPosition, Vector2.zero, GameConstants.launchAcceleration, 0);
+            fallingTarget.Launch(initialPosition, Vector2.zero, GameConstants.fallingTargetLaunchAcceleration, 0);
 
             fallingTarget.isEnabled = true;
             fallingTarget.isVisible = true;
@@ -1172,7 +1176,7 @@ public class GameplayScreen  extends GameScreen {
             LaunchedComponent fallingGoldTarget = fallingGoldTargetComponents[fallingGoldTargetIndex++];
 
             fallingGoldTarget.resetAnimation();
-            fallingGoldTarget.Launch(initialPosition, Vector2.zero, GameConstants.launchAcceleration, 0);
+            fallingGoldTarget.Launch(initialPosition, Vector2.zero, GameConstants.fallingTargetLaunchAcceleration, 0);
 
             fallingGoldTarget.isEnabled = true;
             fallingGoldTarget.isVisible = true;
