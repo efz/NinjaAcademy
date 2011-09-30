@@ -16,6 +16,8 @@ import com.efzgames.framework.gl.Animation;
 import com.efzgames.framework.gl.Texture;
 import com.efzgames.framework.gl.TextureRegion;
 import com.efzgames.framework.math.Line;
+import com.efzgames.framework.math.Rectangle;
+import com.efzgames.framework.math.Rectangle2;
 import com.efzgames.framework.math.Vector2;
 import com.efzgames.ninjaacademy.Assets;
 import com.efzgames.ninjaacademy.GameConstants;
@@ -32,6 +34,7 @@ import com.efzgames.ninjaacademy.elements.SwordSlash;
 import com.efzgames.ninjaacademy.elements.Target;
 import com.efzgames.ninjaacademy.elements.StraightLineMovementComponent;
 import com.efzgames.ninjaacademy.elements.TargetPosition;
+import com.efzgames.ninjaacademy.elements.ThrowingStar;
 import com.efzgames.ninjaacademy.NinjaAcademy;
 
 public class GameplayScreen  extends GameScreen {
@@ -109,6 +112,13 @@ public class GameplayScreen  extends GameScreen {
     
    // Gesture recognition related variables
    private Vector2 dragPosition = null;
+   
+   private int throwingStarIndex = 0;
+   private ThrowingStar[] throwingStarComponents;
+   
+   private Rectangle2 upperTargetArea;
+   private Rectangle2 middleTargetArea;
+   private Rectangle2 lowerTargetArea;
 
     
     Random random;
@@ -139,7 +149,16 @@ public class GameplayScreen  extends GameScreen {
 		createHUDComponents();
 		createSwordSlashes();	
 		
-		 
+		 // Initialize the target areas
+        upperTargetArea = new Rectangle2(GameConstants.upperTargetAreaTopLeft,
+            GameConstants.upperTargetAreaBottomRight);
+        middleTargetArea = new Rectangle2(GameConstants.middleTargetAreaTopLeft,
+            GameConstants.middleTargetAreaBottomRight);
+        lowerTargetArea = new Rectangle2(GameConstants.lowerTargetAreaTopLeft,
+            GameConstants.lowerTargetAreaBottomRight);
+		
+        createThrowingStars();
+        
 		createLaunchedComponents();
 		createBambooSliceComponents();
 		createExplosionComponents();
@@ -365,6 +384,17 @@ public class GameplayScreen  extends GameScreen {
 			if (event.type == TouchEvent.TOUCH_DRAGGED){
 				handleDrag(event);				
 			}
+			if (event.type == TouchEvent.TOUCH_UP && dragPosition == null){
+				 Assets.playSound(Assets.shurikenSound);
+
+                 throwingStarComponents[throwingStarIndex++].throwStar(new Vector2(event.x * this.inputScaleX,
+                		 GameConstants.viewPortHeight - event.y * this.inputScaleY));
+
+                 if (throwingStarIndex >= maxThrowingStars)
+                 {
+                     throwingStarIndex = 0;
+                 }				
+			}
 		}
 	
 		for(GameComponent comp: ((NinjaAcademy)game).components){
@@ -425,9 +455,68 @@ public class GameplayScreen  extends GameScreen {
 		gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
 	
-	  /// <summary>
-    /// Creates the components used to display the game HUD.
-    /// </summary>
+	private void createThrowingStars()
+    {
+        throwingStarComponents = new ThrowingStar[maxThrowingStars];
+
+        for (int i = 0; i < maxThrowingStars; i++)
+        {
+            ThrowingStar throwingStar = new ThrowingStar(glGame, this,
+                new Animation(Assets.throwingstar, new Point(203,91), 4
+                		, new Vector2(100, 32), true, 0.150f));
+                         
+            throwingStar.isVisible = false;
+            throwingStar.isEnabled = false;
+         
+            throwingStar.finishedMoving = new EventHandler(){
+            	@Override
+            	public void onEvent(GameComponent source){
+            		throwingStarHit(source);
+            	}
+            };
+
+            throwingStarComponents[i] = throwingStar;
+
+            ((NinjaAcademy)glGame).components.add(throwingStar);
+        }
+    }
+	
+    void throwingStarHit(GameComponent sender)
+    {
+        ThrowingStar throwingStar = (ThrowingStar)sender;
+
+        Vector2 throwingStarPosition = new Vector2(throwingStar.position);
+
+        // See if any targets were hit
+        if (upperTargetArea.contains(throwingStarPosition) )
+        {
+            throwingStar.isEnabled = false;
+            throwingStar.isVisible = false;
+            checkForTargetHits(throwingStarPosition, upperTargetsInMotion);
+        }
+        else if (middleTargetArea.contains(throwingStarPosition))
+        {
+            throwingStar.isEnabled = false;
+            throwingStar.isVisible = false;
+            checkForTargetHits(throwingStarPosition, middleTargetsInMotion);
+        }
+        else if (lowerTargetArea.contains(throwingStarPosition))
+        {
+            throwingStar.isEnabled = false;
+            throwingStar.isVisible = false;
+            checkForTargetHits(throwingStarPosition, lowerTargetsInMotion);
+        }
+
+        if (checkForTargetHits(throwingStarPosition, goldTargetsInMotion))
+        {
+            throwingStar.isVisible = false;
+        }
+
+        // The throwing star should simply remain on screen, "lodged" into something
+        throwingStar.isEnabled = false;
+    }
+	
+
     private void createHUDComponents(){
     	// Create the component for displaying hit points
         hitPointsComponent = new HitPointsComponent(glGame);        
@@ -1008,5 +1097,97 @@ public class GameplayScreen  extends GameScreen {
     private Vector2 getSliceVelocityVariation()
     {
         return new Vector2(-30 + (float)random.nextDouble() * 60, -10 + (float)random.nextDouble() * 20);
+    }
+    
+    private boolean checkForTargetHits(Vector2 hitPosition, List<Target> targets)
+    {
+        for (int targetIndex = 0; targetIndex < targets.size(); targetIndex++)
+        {
+            Target target = targets.get(targetIndex);
+
+            // See if the target was hit
+            if (target.checkHit(hitPosition))
+            {
+                if (target.isGolden)
+                {
+                    Assets.playSound(Assets.shurikenHitGoldSound);
+                }
+                else
+                {
+                	 Assets.playSound(Assets.shurikenHitSound);
+                }
+
+                // The target no longer needs to be seen or updated
+                target.isEnabled = false;
+                target.isVisible = false;
+
+                // Remove the target from the appropriate active list and return it to the available target stack
+                switch (target.designation)
+                {
+                    case Upper:
+                        upperTargetComponents.push(target);
+                        upperTargetsInMotion.remove(target);
+                        break;
+                    case Middle:
+                        middleTargetComponents.push(target);
+                        middleTargetsInMotion.remove(target);
+                        break;
+                    case Lower:
+                        lowerTargetComponents.push(target);
+                        lowerTargetsInMotion.remove(target);
+                        break;
+                    case Anywhere:
+                        goldTargetComponents.push(target);
+                        goldTargetsInMotion.remove(target);
+                        break;
+                    default:
+                        break;
+                }
+
+                dropTargetFromPosition(target.position, target.isGolden);
+
+                scoreComponent.score = scoreComponent.score + 
+                    (target.isGolden ? GameConfiguration.pointsPerGoldTarget : GameConfiguration.pointsPerTarget);
+
+                // One position can only hit one target
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    private void dropTargetFromPosition(Vector2 initialPosition, boolean isGolden)
+    {
+        if (!isGolden)
+        {
+            LaunchedComponent fallingTarget = fallingTargetComponents[fallingTargetIndex++];
+
+            fallingTarget.resetAnimation();
+            fallingTarget.Launch(initialPosition, Vector2.zero, GameConstants.launchAcceleration, 0);
+
+            fallingTarget.isEnabled = true;
+            fallingTarget.isVisible = true;
+
+            if (fallingTargetIndex >= maxFallingTargets)
+            {
+                fallingTargetIndex = 0;
+            }
+        }
+        else
+        {
+            LaunchedComponent fallingGoldTarget = fallingGoldTargetComponents[fallingGoldTargetIndex++];
+
+            fallingGoldTarget.resetAnimation();
+            fallingGoldTarget.Launch(initialPosition, Vector2.zero, GameConstants.launchAcceleration, 0);
+
+            fallingGoldTarget.isEnabled = true;
+            fallingGoldTarget.isVisible = true;
+
+            if (fallingGoldTargetIndex >= maxFallingGoldTargets)
+            {
+                fallingGoldTargetIndex = 0;
+            }
+        }
     }
 }

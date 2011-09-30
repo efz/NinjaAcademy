@@ -17,7 +17,7 @@ public class Animation {
     public Texture animationSheet;
     public int frameCount;
     
-    private int frameIndex;
+    public int frameIndex;
     
     public int getFrameWidth(){
     	return frameSize.x;
@@ -84,6 +84,12 @@ public class Animation {
 	public void present(float deltaTime, SpriteBatcher batcher , Vector2 position,  float rotation, Vector2 origin) {
 	
 		batcher.drawSprite(position.x +frameSize.x/2, position.y+frameSize.y/2, frameSize.x, frameSize.y, 
+				rotation* Vector2.TO_DEGREES, keyFrames[frameIndex]);
+	}
+	
+	public void present(float deltaTime, SpriteBatcher batcher , Vector2 position,  float rotation, Vector2 origin, float scale) {
+		
+		batcher.drawSprite(position.x +frameSize.x/2, position.y+frameSize.y/2, frameSize.x * scale, frameSize.y * scale, 
 				rotation* Vector2.TO_DEGREES, keyFrames[frameIndex]);
 	}
     

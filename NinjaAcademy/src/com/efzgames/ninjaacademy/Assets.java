@@ -53,6 +53,9 @@ public class Assets {
 	public static Sound swordSlashSound;
 	public static Sound bambooSliceSound;
 	public static Sound explosionSound;
+	public static Sound shurikenHitGoldSound;
+	public static Sound shurikenHitSound;
+	public static Sound shurikenSound;
 	public static Music ninjaAcademyMusic;
 	
 	public static Typeface moireFont;
@@ -87,6 +90,8 @@ public class Assets {
 	public static TextureRegion fallinggoldtargetRegion;
 	public static Texture target;
 	public static TextureRegion targetRegion;
+	public static Texture throwingstar;
+	public static TextureRegion throwingstarRegion;
 	
 	public static void load(GLGame game) {
 
@@ -123,6 +128,9 @@ public class Assets {
 		menuSelectionSound = game.getAudio().newSound("audios/Menu_Selection.ogg");
 		bambooSliceSound = game.getAudio().newSound("audios/Bamboo_Slice.ogg");
 		explosionSound = game.getAudio().newSound("audios/Explosion.ogg");
+		shurikenHitGoldSound = game.getAudio().newSound("audios/Shuriken_Metal_Hit.ogg");
+		shurikenHitSound = game.getAudio().newSound("audios/Shuriken_Wood_Hit.ogg");
+		shurikenSound = game.getAudio().newSound("audios/Shuriken_Throw.ogg");
 		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
 		Assets.ninjaAcademyMusic.setLooping(true);
 		
@@ -146,15 +154,17 @@ public class Assets {
 		leftSliceRegion = new TextureRegion(slice,0,0,20,184);
 		rightSliceRegione = new TextureRegion(slice,0,0,20,184);
 		explosion = new Texture(game, "textures/elements/Explosion.png", false);
-		explosionRegion = new TextureRegion(slice,0,0,240,40);
+		explosionRegion = new TextureRegion(explosion,0,0,240,40);
 		goldtarget = new Texture(game, "textures/elements/gold_target.png", false);
-		goldtargetRegion = new TextureRegion(slice,0,0,684,58);	
+		goldtargetRegion = new TextureRegion(goldtarget,0,0,684,58);	
 		fallingtarget = new Texture(game, "textures/elements/targetFalling.png", false);
-		fallingtargetRegion = new TextureRegion(slice,0,0,456,58);	
+		fallingtargetRegion = new TextureRegion(fallingtarget,0,0,456,58);	
 		fallinggoldtarget = new Texture(game, "textures/elements/GoldTargetFalling.png", false);
-		fallinggoldtargetRegion = new TextureRegion(slice,0,0,456,58);
+		fallinggoldtargetRegion = new TextureRegion(fallinggoldtarget,0,0,456,58);
 		target = new Texture(game, "textures/elements/target.png", false);
-		targetRegion = new TextureRegion(slice,0,0,57,58);
+		targetRegion = new TextureRegion(target,0,0,57,58);
+		throwingstar = new Texture(game, "textures/elements/throwingStar.png", false);
+		throwingstarRegion = new TextureRegion(throwingstar,0,0,812,91);
 	}
 	
 	public static void reload() {
