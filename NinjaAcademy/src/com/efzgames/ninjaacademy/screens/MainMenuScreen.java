@@ -104,7 +104,7 @@ public class MainMenuScreen extends GLScreen {
 					- event.y * inputScaleY);
 			if (OverlapTester.pointInRectangle(startBounds, touchPoint)) {
 				Assets.playSound(Assets.menuSelectionSound);
-				game.setScreen(new InstructionsScreen(game));
+				game.setScreen(new CountdownScreen(game));
 				return;
 			}
 //			if (OverlapTester.pointInRectangle(highscoreBounds, touchPoint)) {
