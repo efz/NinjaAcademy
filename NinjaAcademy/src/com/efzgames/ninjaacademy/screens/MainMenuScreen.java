@@ -27,8 +27,8 @@ public class MainMenuScreen extends GLScreen {
 	private ElementState ninjaState = ElementState.Invisible;
 	private ElementState titleState = ElementState.Invisible;
 
-	private float ninjaAppearDelay = 3.0f;
-	private float titleAppearDelay = 2.0f;
+	private float ninjaAppearDelay = 2.0f;
+	private float titleAppearDelay = 1.0f;
 	private float ninjaAppearDuration = 0.5f;
 	private float titleAppearDuration = 0.5f;
 
