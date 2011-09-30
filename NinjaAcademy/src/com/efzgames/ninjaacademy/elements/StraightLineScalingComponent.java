@@ -39,7 +39,7 @@ public class StraightLineScalingComponent extends StraightLineMovementComponent 
           if (remainingScaleAmount <= 0)
           {
               // The scale may have changed more than we intended, so change it back appropriately
-              scale += remainingScaleAmount * -(scaleChange< 0 ? -1 : (scaleChange > 0 ? 1 : 0));                
+              scale += remainingScaleAmount * (scaleChange< 0 ? -1 : (scaleChange > 0 ? 1 : 0));                
               scaleVelocity = 0;
           }
 	}
