@@ -394,18 +394,18 @@ public class GameplayScreen extends GameScreen {
 			if (event.type == TouchEvent.TOUCH_DRAGGED) {
 				handleDrag(event);
 			}
-//			if (event.type == TouchEvent.TOUCH_UP && dragPosition == null) {
-//				Assets.playSound(Assets.shurikenSound);
-//
-//				throwingStarComponents[throwingStarIndex++]
-//						.throwStar(new Vector2(event.x * this.inputScaleX,
-//								GameConstants.viewPortHeight - event.y
-//										* this.inputScaleY));
-//
-//				if (throwingStarIndex >= maxThrowingStars) {
-//					throwingStarIndex = 0;
-//				}
-//			}
+			if (event.type == TouchEvent.TOUCH_UP && dragPosition == null) {
+				Assets.playSound(Assets.shurikenSound);
+
+				throwingStarComponents[throwingStarIndex++]
+						.throwStar(new Vector2(event.x * this.inputScaleX,
+								GameConstants.viewPortHeight - event.y
+										* this.inputScaleY));
+
+				if (throwingStarIndex >= maxThrowingStars) {
+					throwingStarIndex = 0;
+				}
+			}
 		}
 
 		for (GameComponent comp : ((NinjaAcademy) game).components) {
