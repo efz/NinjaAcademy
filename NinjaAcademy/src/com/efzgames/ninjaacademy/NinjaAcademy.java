@@ -27,7 +27,7 @@ public class NinjaAcademy extends GLGame{
 	
 	public int getHigtScore(){
 		SharedPreferences appSharedPrefs = getSharedPreferences(APP_SHARED_PREFS, Activity.MODE_PRIVATE);      
-		return appSharedPrefs.getInt(HIGH_SCORE_KEY, 100);
+		return appSharedPrefs.getInt(HIGH_SCORE_KEY, 1);
 	}
 	
 	public void setHighScore(int highScore){

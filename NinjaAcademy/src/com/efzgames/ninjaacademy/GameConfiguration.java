@@ -8,6 +8,8 @@ public class GameConfiguration {
 	public static final int pointsPerTarget = 1;
 	public static final int pointsPerGoldTarget = 10;
 	public static final int pointsPerBamboo = 3;
+	public static final int penaltyPerBambooDrop = 5;
+	public static final int penaltyPerExpodeDynamite = 20;
 
 	public static List<GamePhase> phases = new ArrayList<GamePhase>();
 

@@ -396,6 +396,9 @@ public class GameplayScreen  extends GameScreen {
 		if(totalGameTime >= GameConstants.maxGameTime && !isGameOver)
 			markGameOver();
 		
+		int hitCount = Math.min( (int)Math.floor(totalGameTime*5/GameConstants.maxGameTime), 5);
+		setHitPoints(5 - hitCount);
+		
 		List<TouchEvent> events = game.getInput().getTouchEvents();
 		int len = events.size();
 
@@ -612,13 +615,8 @@ public class GameplayScreen  extends GameScreen {
         bambooComponents.push(bamboo);
         inAirBambooComponents.remove(bamboo);
 
-        int hitPoints = Math.max(getHitPoints() - 1, 0);
-        setHitPoints(hitPoints);
-
-        if (hitPoints == 0)
-        {
-            //MarkGameOver();
-        }
+        this.scoreComponent.score = Math.max(this.scoreComponent.score - GameConfiguration.penaltyPerBambooDrop, 0);        
+       
     }
     
     void dynamiteDroppedOutOfScreen(LaunchedComponent dynamite)
@@ -936,11 +934,8 @@ public class GameplayScreen  extends GameScreen {
 
                     showExplosion(dynamite.position);
 
-                    setHitPoints( 0);
+                    this.scoreComponent.score = Math.max(this.scoreComponent.score - GameConfiguration.penaltyPerExpodeDynamite, 0); 
                     
-                    //MarkGameOver();                        
-
-                    // We don't need to check the rest of the edges
                     break;
                 }
             }
@@ -1224,10 +1219,18 @@ public class GameplayScreen  extends GameScreen {
         currentPhase.targetAppearanceIntervals = new float[] { 10, 10, 10 };
         currentPhase.targetAppearanceProbabilities = new double[] { 0, 0, 0 };
         
+        if(this.scoreComponent.score > oldHighScore)
+        	((NinjaAcademy)glGame).setHighScore(this.scoreComponent.score);
+        
         GameOverComponent comp =  new GameOverComponent(glGame, this.scoreComponent.score > oldHighScore, this.scoreComponent.score );
         comp.isEnabled = true;
         comp.isVisible = true;
         ((NinjaAcademy)glGame).components.add(comp);
             
     }
+    
+    @Override
+	public void resume() {
+    	game.setScreen(new MainMenuScreen(game));		
+	}
 }
