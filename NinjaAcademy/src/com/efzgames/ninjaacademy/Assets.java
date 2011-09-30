@@ -56,6 +56,8 @@ public class Assets {
 	public static Sound shurikenHitGoldSound;
 	public static Sound shurikenHitSound;
 	public static Sound shurikenSound;
+	public static Sound gameOverSound;
+	public static Sound highScoreSound;
 	public static Music ninjaAcademyMusic;
 	
 	public static Typeface moireFont;
@@ -131,6 +133,8 @@ public class Assets {
 		shurikenHitGoldSound = game.getAudio().newSound("audios/Shuriken_Metal_Hit.ogg");
 		shurikenHitSound = game.getAudio().newSound("audios/Shuriken_Wood_Hit.ogg");
 		shurikenSound = game.getAudio().newSound("audios/Shuriken_Throw.ogg");
+		gameOverSound = game.getAudio().newSound("audios/Game_Over.ogg");
+		highScoreSound = game.getAudio().newSound("audios/NewHighScore.ogg");
 		ninjaAcademyMusic = game.getAudio().newMusic("audios/NinjAcademy_Music.ogg");
 		Assets.ninjaAcademyMusic.setLooping(true);
 		

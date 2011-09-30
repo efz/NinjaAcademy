@@ -26,6 +26,7 @@ import com.efzgames.ninjaacademy.GamePhase;
 import com.efzgames.ninjaacademy.elements.DisappearingAnimationComponent;
 import com.efzgames.ninjaacademy.elements.EventHandler;
 import com.efzgames.ninjaacademy.elements.GameComponent;
+import com.efzgames.ninjaacademy.elements.GameOverComponent;
 import com.efzgames.ninjaacademy.elements.HitPointsComponent;
 import com.efzgames.ninjaacademy.elements.LaunchedComponent;
 import com.efzgames.ninjaacademy.elements.ScoreComponent;
@@ -38,6 +39,10 @@ import com.efzgames.ninjaacademy.elements.ThrowingStar;
 import com.efzgames.ninjaacademy.NinjaAcademy;
 
 public class GameplayScreen  extends GameScreen {
+	
+	private boolean isGameOver = false;
+	private float totalGameTime = 0;
+	
 	
 	static final float closeDragDistance = 25;
 
@@ -121,6 +126,7 @@ public class GameplayScreen  extends GameScreen {
    private Rectangle2 lowerTargetArea;
 
     
+   private int oldHighScore;
     Random random;
     
     public int gamePhasesPassed;
@@ -133,7 +139,9 @@ public class GameplayScreen  extends GameScreen {
 	
 	public GameplayScreen(Game game) {
 		super(game);
-		 
+		
+		((NinjaAcademy)glGame).components.clear();
+		oldHighScore = ((NinjaAcademy)glGame).getHigtScore();
 		random = new Random();
 		
 		gamePhasesPassed = -1;
@@ -380,11 +388,20 @@ public class GameplayScreen  extends GameScreen {
 	@Override
 	public void update(float deltaTime) {
 		
+		if(isGameOver)			
+			return;
+		
+		totalGameTime += deltaTime;		
+		
+		if(totalGameTime >= GameConstants.maxGameTime && !isGameOver)
+			markGameOver();
+		
 		List<TouchEvent> events = game.getInput().getTouchEvents();
 		int len = events.size();
 
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = events.get(i);
+			
 			if (event.type == TouchEvent.TOUCH_DRAGGED){
 				handleDrag(event);				
 			}
@@ -525,6 +542,7 @@ public class GameplayScreen  extends GameScreen {
         
         scoreComponent = new ScoreComponent(glGame);
         scoreComponent.score =0;
+        scoreComponent.highscore = oldHighScore;
         scoreComponent.isEnabled = true;
         scoreComponent.isVisible = true;
         ((NinjaAcademy)glGame).components.add(scoreComponent);
@@ -1186,5 +1204,30 @@ public class GameplayScreen  extends GameScreen {
                 fallingGoldTargetIndex = 0;
             }
         }
+    }
+    
+
+    private void markGameOver()
+    {
+        isGameOver = true;
+
+        Assets.playSound(Assets.gameOverSound);
+
+        // Cause no new components to appear
+        currentPhase = new GamePhase();
+        
+        currentPhase.bambooAppearanceProbablity = 0;
+        currentPhase.bambooAppearanceInterval = 10;
+        currentPhase.duration =-1;
+        currentPhase.dynamiteAppearanceInterval = 10;
+        currentPhase.dynamiteAppearanceProbablity = 0;
+        currentPhase.targetAppearanceIntervals = new float[] { 10, 10, 10 };
+        currentPhase.targetAppearanceProbabilities = new double[] { 0, 0, 0 };
+        
+        GameOverComponent comp =  new GameOverComponent(glGame, this.scoreComponent.score > oldHighScore, this.scoreComponent.score );
+        comp.isEnabled = true;
+        comp.isVisible = true;
+        ((NinjaAcademy)glGame).components.add(comp);
+            
     }
 }

@@ -16,6 +16,7 @@ public class ScoreComponent extends GameComponent{
 	}
 	
 	public int score;
+	public int highscore;
 	
 	public static final Vector2 ScorePosition = new Vector2(10, 480-15); 
 	
@@ -26,11 +27,11 @@ public class ScoreComponent extends GameComponent{
 
 	@Override
 	public void present(float deltaTime, SpriteBatcher batcher) {
-		String scoreText = "Score: "+ score;
+		String scoreText = "Score: "+ score +"/"+highscore;
 		
 		SpriteText scoreSprite = new SpriteText(glGame, scoreText,
 				Assets.moireBoldFont,
-				36,  Color.WHITE, 350, 60);				
+				36,  Color.WHITE, 550, 60);				
 		scoreSprite.draw(batcher, ScorePosition.x + scoreSprite.getTextWidth()/2,
 				ScorePosition.y - scoreSprite.getTextHeight()/2);
 	}
