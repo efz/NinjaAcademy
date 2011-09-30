@@ -27,7 +27,7 @@ public class ScoreComponent extends GameComponent{
 	}
 	
 	public synchronized void setHighscore(int value){
-		score = value;
+		highscore = value;
 	}
 	
 	private static final Vector2 ScorePosition = new Vector2(10, 480-15); 
