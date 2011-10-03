@@ -1,7 +1,6 @@
 package com.efzgames.ninjaacademy.screens;
 
 import java.util.List;
-import java.util.AbstractMap.SimpleEntry;
 
 import javax.microedition.khronos.opengles.GL10;
 
